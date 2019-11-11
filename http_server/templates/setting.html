@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<script type="text/javascript" src="/static/js/vue.min.js"></script>
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+  <div class="container">
+
+    <div id="settings_app">
+        <div v-if="alert" class="alert alert-primary" role="alert">
+
+          <div class="row">
+
+            <div class="col-md-12 order-md-1">
+              [[alert]]
+            </div>
+          </div>
+        </div>
+
+      <div class="py-5 text-center">
+        <h2>Network Config</h2>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 order-md-1">
+
+
+          <div class="row">
+
+            <div class="col-sm-3 mb-3">
+              <label for="address">IP地址</label>
+              <input type="text" class="form-control required" id="address" name="address" placeholder="" v-model="address" required="">
+              <div class="invalid-feedback">
+                Valid IP Address is required.
+              </div>
+            </div>
+
+
+            <div class="col-sm-3 mb-3">
+              <label for="mask">子网掩码</label>
+              <input type="text" class="form-control required" id="netmask" name="netmask"  v-model="netmask" required="">
+              <div class="invalid-feedback">
+                Valid netmask value is required.
+              </div>
+            </div>
+
+            <div class="col-sm-3 mb-3">
+              <label for="netgate">网关</label>
+              <input type="text" class="form-control required" id="gateway" name="gateway" v-model="gateway" required="">
+              <div class="invalid-feedback">
+                Valid netgate value is required.
+              </div>
+            </div>
+
+            <div class="col-sm-3 mb-3">
+              <label for="netgate">DNS</label>
+              <input type="text" class="form-control required" id="gateway" name="dns" v-model="dns" required="">
+              <div class="invalid-feedback">
+                DNS netgate value is required.
+              </div>
+            </div>
+          </div>
+          <button v-on:click="setNetworkConfig" class="btn btn-primary btn-lg btn-block">更新网络设置</button>
+          <!-- </form> -->
+        </div>
+      </div>
+
+  </div>
+</main>
+{% end %}
+
+{% block extraJS %}
+<!-- <script src="/static/js/info_handling.js" type="text/javascript" defer></script> -->
+<script src="/static/js/vue_settings.js" type="text/javascript"></script>
+{% end %}

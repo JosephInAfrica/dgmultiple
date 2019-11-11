@@ -1,0 +1,70 @@
+{
+  "data": [
+    {
+
+      "u_id": "DBA3A386",
+
+      "u_status": [
+        {
+          "status": 1,
+          "index": 1,
+          "tag": "E0DA1DC1"
+        },
+        
+        {
+          "status": 0,
+          "index": 6,
+          "tag": 0
+        },
+        {
+          "status": 0,
+          "index": 5,
+          "tag": 0
+        },
+        {
+          "status": 0,
+          "index": 4,
+          "tag": 0
+        },
+        {
+          "status": 0,
+          "index": 3,
+          "tag": 0
+        },
+        {
+          "status": 0,
+          "index": 2,
+          "tag": 0
+        }
+      ]
+    },
+    {
+      "u_id": "10FDFD67",
+
+      "u_status": [
+        {
+          "status": 1,
+          "index": 1,
+          "tag": "F403FE72"
+        },
+        
+        {
+          "status": 0,
+          "index": 4,
+          "tag": 0
+        },
+        {
+          "status": 0,
+          "index": 3,
+          "tag": 0
+        },
+        {
+          "status": 0,
+          "index": 2,
+          "tag": 0
+        }
+      ]
+    }
+  ]
+
+}

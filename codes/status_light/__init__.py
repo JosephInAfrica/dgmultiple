@@ -1,0 +1,88 @@
+#!encoding=utf8
+
+"收到数据后怎么处理？所有的相关函数都已经写好，这里将所有的函数串起来便于engine调用。把所有的所需要参数都参与。"
+"这个包是关于解析用户输入的灯光信息;输出要执行的设置代码和更新全局变量;"
+from _parse_input import parse, merge_light
+from _filter import rid_redundant
+from generate_executables import Code
+from pget import get_light, get_tag
+from _from_light_to_codes import from_light_to_codes
+
+
+def from_light_to_executables(light, raw_status):
+    codes = from_light_to_codes(light)
+
+    codes=[Code(*i,raw_status=raw_status) for i in codes]
+    return codes
+    # return (executables,codes)
+
+
+def treat_post(dic, raw_light, raw_status, light_range):
+    "收到一个经json转化的dict。需要check状态，生成错误代码用于返回;生成commandList以便发送(如果不需要做任何事，应该生成[]);更新raw_light的状态。"
+    "需要raw_status参与，会修改raw_light"
+    "会返回error_data,codes_to_execute，并改变raw_status的值。"
+    "将error_data返回给post，将codes_to_execute给engine来执行。本函数应该在handle post里"
+    print("raw_light", raw_light)
+    print("raw_status", raw_status)
+    error_data, light_codes = parse(dic, raw_status, light_range)
+    # 生成错误代码和灯代码。
+
+    light_codes = rid_redundant(light_codes, raw_light)
+    print("light_codes after filter dups", light_codes)
+    # 这里会修改全局变量raw_light的值。
+    raw_light = merge_light(raw_light, light_codes)
+
+    # codes = codes_to_codes(light_codes, raw_status)
+    codes = [Code(*i,raw_status=raw_status) for i in light_codes]
+    return (error_data, codes)
+
+
+def status_light(vanila_status, vanila_light, registered_modules, upsidedown=True):
+    # 把现有数据转化成api的样子。传入vanila status和vanila light.
+    # vanila_light.{"u123":{1:0,2:1}}
+
+    tencent = {}
+    data = []
+    err_code = 0
+
+    def calibrated_index(i, u_count):
+        if type(i) != int:
+            i = int(i)
+        if upsidedown:
+            return u_count + 1 - i
+        else:
+            return i
+
+    for module_id, module_content in vanila_status.items():
+        u_count = module_content.get("u_count")
+        u_status = module_content.get('status')
+        available = module_content.get("available")
+
+        data0 = {"u_id": module_id, "u_count": u_count, "u_power": 0}
+
+        status = [{"index": calibrated_index(i, u_count), "status": get_light(vanila_light, module_id, i), "tag": None} for i in range(1, u_count + 1) if i not in available]
+
+        data0['u_status'] = [{"index": calibrated_index(index, u_count), "status": get_light(vanila_light, module_id, index), "tag": tag} for index, tag in u_status.items()]
+
+        data0['u_status'].extend(status)
+        data.append(data0)
+
+    for module_id in registered_modules:
+        if module_id in vanila_status.keys():
+            continue
+        data0 = {"u_id": module_id, "u_count": 42, "u_power": 0, "u_status": None}
+        print('dropped module:', data0)
+        data.append(data0)
+
+    err_code = -100
+    for module in data:
+        if module.get('u_status'):
+            err_code = 0
+            break
+    if err_code < 0:
+        data = None
+        # 应腾讯要求如果err_code<0,data应为None. 所以全部掉线时，就不必显示已经掉线的条的module_id和u_count.
+
+    tencent['data'] = data
+    tencent['err_code'] = err_code
+    return tencent
