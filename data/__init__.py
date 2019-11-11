@@ -9,8 +9,7 @@ from setting import setting
 from loggers import elogger, rlogger, rlog, elog
 from tornado.gen import coroutine
 import os
-from codes.status_light import status_light, treat_post, from_light_to_executables
-from tools import from_light_to_codes
+from codes.status_light import status_light, treat_post,from_light_to_codes, from_light_to_executables
 from codes.blink_freq import parse as parse_blink
 from codes.temp_hum import temp_hum
 from startup import recover_host, recover_light, recover_blink

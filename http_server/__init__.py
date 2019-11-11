@@ -7,6 +7,7 @@ from .config_handler import ConfigHandler, NetworkHandler
 from .register_host import RegisterHost, CancelRegister
 from .light_handler import LightHandler
 from .control import Push
+from .alert_off import AlertOffHandler 
 urlmap = [
     (r"/", ConfigHandler),
     (r"/u", ApiTencent),

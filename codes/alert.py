@@ -7,7 +7,7 @@ class AlertOffCode(object):
 	def __init__(self,module_id,index,raw_status):
 		self.module_id=module_id
 		self.address=raw_status.get(module_id).get("address")
-		self.index=raw_status.get("u_amount")+1-index
+		self.index=raw_status.get(module_id).get("u_count")+1-index
 
 	@property
 	def code(self):
