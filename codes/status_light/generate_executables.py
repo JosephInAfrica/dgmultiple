@@ -24,7 +24,7 @@ class Code(object):
         return _code_to_code((self.module_id,self.index,self.status),self.raw_status)
         
     def __repr__(self):
-        return "module:%s index:%s status:%s"%(self.module_id,self.index,self.status)
+        return "<LightColor>module:%s index:%s status:%s"%(self.module_id,self.index,self.status)
 
 def _code_to_code(code, raw_status):
     "输入light code (module_id,index,status). 生成执行代码list."

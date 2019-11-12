@@ -22,5 +22,5 @@ urlmap = [
     (r"/register", RegisterHost),
     (r"/cancel", CancelRegister),
     (r"/push", Push),
-    (r"/alert-off", AlertOffHandler),
+    (r"/alertoff", AlertOffHandler),
 ]

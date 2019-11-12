@@ -60,6 +60,6 @@ def validate(module_id,index,raw_status):
     module=raw_status.get(module_id)
     if not module:
         return (0,"module of id<%s> is not online"%module_id)
-    if index>module.get("u_amount") or index<1:
+    if index>module.get("u_count") or index<1:
         return (0,"index out of range.")
     return (1,"")

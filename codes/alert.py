@@ -14,7 +14,7 @@ class AlertOffCode(object):
 		return reset_alert_code(self.address,self.index)
 		
 	def __repr__(self):
-		return "<reset>%s:%s:%s"%self.address,self.module_id,self.index	
+		return "<reset>%s:%s:%s"%(self.address,self.module_id,self.index)	
 
 
 
@@ -31,7 +31,7 @@ def reset_alert_code(address,index):
 	value="0100"
 	# 提前知道地址不会超过256。所以地址的高字节直接00了。
 	result="%s0600%s%s"%(address,index,value)
-	return modify_str(result)
+	return modify_str(result.decode("hex"))
 
 
 
