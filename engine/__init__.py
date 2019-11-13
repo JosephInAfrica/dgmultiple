@@ -10,9 +10,9 @@ from serial_enquiry import modify_str, write_enquiry, Codes
 from data import dataCenter
 from check_module import check_module
 from watch_modules import watch_modules
-from utils.push_upward import heart_beat as _heart_beat, update as _update
+from utils.push_upward import heart_beat as _heart_beat, update as _update,upload_temp as _upload_temp
 import json
-
+from codes.temp_hum import init_temp
 codes = [Codes(i) for i in range(1, setting.module_amount + 1)]
 # 由设置模块数量来生成将要生成codes.
 def codes_online():
@@ -34,7 +34,8 @@ class DataFeeder(object):
     @gen.coroutine
     def to_start_up(self):
         self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=0.6)
-        rlog("dataCenter is initializing itself.trying to stroke first time\n===")
+        print("init temp modules.")
+        self.run_command(init_temp(setting.module_amount,setting.temp_amount))
         dataCenter.vanila_status, _, _ = yield self.stroke()
         rlog("trying to update for first time")
         yield self.on_data_update()
@@ -42,14 +43,21 @@ class DataFeeder(object):
         self.on_re_onshelf()
 
     def run_command(self, codes):
-        # 所有运行代码的接口
         self.commandList.extend(codes)
 
     @gen.coroutine
     def update(self):
+        # 动作。上传。
         print("trying to update!!")
         yield _update(dataCenter.host, dataCenter.to_upload)
 
+
+    @gen.coroutine
+    def upload_temp(self):
+        print("upload temp!!")
+        yield _upload_temp(dataCenter.host,dataCenter.temp_to_upload)
+
+        
     @gen.coroutine
     def heart_beat(self):
         # constantly heart beat. 受设置的控制。如果设置关的，无法热启动。
@@ -62,7 +70,6 @@ class DataFeeder(object):
             results = yield _heart_beat(dataCenter.host)
             print("heart beat done==>", results)
 
-
     @gen.coroutine
     def on_startup(self):
         # 刚开机。所有模块上架。
@@ -71,37 +78,30 @@ class DataFeeder(object):
             elogger.exception(err)
 
     def on_re_onshelf(self):
+        # 目前只有下发命令的功能 。
         self.run_command(dataCenter.commands)
 
     def _runGivenCommand(self, all_loaded_required=True):
         "never call it directly. Call it by modifying feeders's command List.传入一个codeList,会按顺序执行。然后清空command_list."
-
         if not self.commandList:
             return
-
         if all_loaded_required:
             if not dataCenter.all_loaded:
                 print("not fully loaded.See you next time.")
                 return
-
         print("trying to execute commands....")
-
         n=0
         while self.commandList:
             n+=1
             if n>setting.write_bunch//setting.write_repeat:
                 break
             i = self.commandList.pop()
-
-
             for time in range(setting.write_repeat):
-
                 try:
                     print('enquiring:', i)
                     feedback = write_enquiry(self._ser, i.code, setting.write_interval)
                     success=(feedback==i.code)
                     if not success:
-                    # print("success",success)
                         print("feedback,code", feedback,i.code,"\n")
                 except Exception as e:
                     feedback = e.__repr__()
@@ -124,6 +124,18 @@ class DataFeeder(object):
         yield self.update()
 
     @gen.coroutine
+    def on_temp_update(self):
+        rlog("temp updating")
+        if not setting.upload:
+            print("update switched off")
+            return
+        if not dataCenter.host:
+            print("no host to update to")
+            return
+        yield self.upload_temp()
+
+
+    @gen.coroutine
     def stroke(self,online_only=0):
         "这个stroke是取数据冲程。"
         def valid(t):
@@ -134,9 +146,9 @@ class DataFeeder(object):
             return 1
 
         models = {}
+        # 除temp以外所有的
         updated = 0
-        status_updated = 0
-        new_modules = []
+        temp_updated = 0
         invalid_addr = []
 
         if online_only:
@@ -176,39 +188,38 @@ class DataFeeder(object):
                         # rlog("%s no temp cache for reference." % module_id)
                         pass
                     else:
-
                         rlog("%s using cached temp. Failed %s times." % (module_id, dataCenter.temp_failure_count[module_id]))
-
                         result["temp_hum"] = dataCenter.temp[module_id]
 
                 else:
-                    # 如果超过了缓存允许使用范围。
-                    # rlog("%s temp failed %s times.Cease using cache..." % (module_id, dataCenter.temp_failure_count[module_id]))
                     pass
             models[module_id] = result
             if dataCenter.vanila_status.get(module_id):
-                if dataCenter.vanila_status[module_id] != result:
-                    updated = 1
+                if dataCenter.vanila_status[module_id]['temp_hum'] != result.get("temp_hum"):
+                    temp_updated = 1
+                if dataCenter.vanila_status[module_id]['status']!=result.get("status") or dataCenter.vanila_status[module_id]['alert']!=result.get("alert"):
+                    updated=1
             else:
                 updated = 1
-                status_updated = 1
-                new_modules.append(module_id)
+                temp_updated=1
 
             dataCenter.vanila_status[module_id] = result
 
 # 这里改了一下缩进。不管是否变化，是否有历史记录，都会更新dataCenter.
         # 这里gen.return只有一个值。
-        raise gen.Return((models, updated, status_updated))
+        raise gen.Return((models, updated, temp_updated))
 
 
     @gen.coroutine
     def strokes(self,online_only=0):
         # 所有的冲程。包括取数据，比对，触发各种勾子（重新上线，数据更新）
         old_modules = dataCenter.vanila_status.keys()
-        dataCenter.vanila_status, updated, _ = yield self.stroke(online_only=online_only)
+        dataCenter.vanila_status, updated, temp_updated = yield self.stroke(online_only=online_only)
         # print("vanila_status",dataCenter.vanila_status)
         if updated:
             yield self.on_data_update()
+        if temp_updated:
+            yield self.on_temp_update()
         new_modules = dataCenter.vanila_status.keys()
         re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
 
@@ -233,14 +244,11 @@ class DataFeeder(object):
                         print("%s seconds left"%(setting.resume_delay-i))
                     print("resume work")              
                     yield self.strokes(online_only=0)
-
-
                 if dataCenter.partly_online:
                     l=len(dataCenter.online_address)
                     for i in range(12//l):
                         print("%s modules online.Checking online only.%s of %s times"%(l,i+1,12//l))
                         yield self.strokes(online_only=1)
-
             yield self.strokes(online_only=0)
 
 

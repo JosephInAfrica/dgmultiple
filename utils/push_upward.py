@@ -48,9 +48,20 @@ def update(uri, content):
 
 @coroutine
 def heart_beat(uri):
-    result=yield push_single(uri, setting.url_heartbeat, content={"heartBeat": dataCenter.network.get("address")})
+    result=yield push_single(uri, setting.url_heartbeat, content={"heartBeat": setting.network.get("address")})
     if result.get("status")<0:
         print("heartbeat failed")
     else:
         print("heartbeat success")
+    raise gen.Return(result)
+
+
+@coroutine
+def upload_temp(uri,content):
+    result=yield push_single(uri,setting.url_temp,content)
+
+    if result.get("status")<0:
+        print("update failed:",result)
+    else:
+        print("update success===>:",content)
     raise gen.Return(result)

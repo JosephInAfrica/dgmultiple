@@ -1,5 +1,31 @@
 # encoding=utf8
+from utils.crc16 import modify_str
+from utils.bytes import ord_to_hex
+# from setting import setting
 
+def init_temp(module_amount,temp_amount):
+    codes=[Code(i+1,temp_amount) for i in range(module_amount)]
+    return codes
+
+class Code(object):
+    # 开几个温湿度模块
+    def __init__(self,address,amount=6):
+        self.address=address
+        self.amount=amount
+
+    @property    
+    def code(self):
+        if amount==0:
+            result="%s0600080000"%ord_to_hex(address)
+
+            return "%s0600080000"%ord_to_hex(address)
+        else:
+            result="%s06000801%s"%(ord_to_hex(address),ord_to_hex(amount))
+
+        return modify_str(result.decode("hex"))
+
+    def __repr__(self):
+        return "<SetTempHum>[%s Sensors]"%self.amount
 
 def temp_hum(raw):
     # 由raw_status/vanila_status数据，生成腾讯规定的温湿度数据。目前是每个机柜三个，分上中下。

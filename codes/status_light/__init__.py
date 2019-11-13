@@ -64,7 +64,6 @@ def treat_post(dic, raw_light, raw_status, light_range):
     # 这里会修改全局变量raw_light的值。
     raw_light = merge_light(raw_light, light_codes)
 
-    # codes = codes_to_codes(light_codes, raw_status)
     codes = [Code(*i,raw_status=raw_status) for i in light_codes]
     return (error_data, codes)
 

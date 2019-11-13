@@ -8,15 +8,31 @@ import re
 color16 = {0: "00", 1: "00", 2: "06", 3: "01",4:"02",5:"0D",6:"08",7:"09",8:"04",9:"03",10:"05",11:"07",12:"0B",13:"0A",14:"0C",15:"0E"}
 
 color4={0: "06", 1: "01", 2: "0D", 3: "08"}
+basedir = abspath("/home/root/")
+ip_config = join(basedir, "ip.sh")
+def get_network_config():
+    "从系统中读取到配置文件"
+    
 
+    def parse(file):
+        import re
+        ip_ = re.compile("\d+\.\d+\.\d+\.\d+")
+        with open(file, 'r') as file:
+            lines = file.readlines()
+
+        ips = [re.findall(ip_, line) for line in lines]
+        ips = [ip[0] for ip in ips if ip]
+        ip, netmask, gateway, dns = ips
+
+        return dict(address=ip, netmask=netmask, gateway=gateway, dns=dns)
+    print("get_network_config is called!!!!\n\n")
+    return parse(ip_config)
 
 
 class BaseConfig:
-    # basedir = abspath(dirname(__file__))
-    # 影响灯的代码映射：for_tencent=1只允许4种灯状态，根据腾讯协议；for_tencent=0允许所有16种灯状态;根据BS平台的约定。
-
 
     # for_tencnet值0,1分别代表模块和标签的id按腾讯的要求加工/采用原始数据。
+    network=get_network_config()
     for_tencent=0
     # 是否上传数据到数据平台。
     upload = 1
@@ -37,7 +53,7 @@ class BaseConfig:
     heartbeat_interval = 20
     basedir = abspath("/home/root/")
     logsdir = join(basedir, "logs")
-    ip_config = join(basedir, "ip.sh")
+    # ip_config = join(basedir, "ip.sh")
     backup_light = join(basedir, "backup_light.json")
     backup_status = join(basedir, "backup_status.json")
     backup_blink = join(basedir, "backup_blinkfreq.json")
@@ -50,10 +66,11 @@ class BaseConfig:
     # 与数据平台对接：数据平台接收update和heartbeat相应uri.
     url_update = "/update"
     url_heartbeat = "/heartbeat"
+    url_temp="/temp"
     regular_log = join(logsdir, "regular.log")
     uvariation_log = join(logsdir, "uvariation.log")
     error_log = join(logsdir, "error.log")
-
+    temp_amount=6
     temp_hum_nos = [(10, 11, 12), (13, 14, 15)]
     interval = 0.6
     write_interval=1.2
@@ -99,6 +116,7 @@ class TestConfig(BaseConfig):
     light_range = range(16)
     all_loaded_required = False
     lazy_recover=False
+    temp_amount=1
     # 每个模块温湿度模块个数
 
 class setting(TestConfig):

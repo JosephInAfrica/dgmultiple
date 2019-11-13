@@ -33,7 +33,6 @@ class DataCenter(dict):
     codes_for_recovery = []
     registered_modules = set()
     host = ""
-    # host is ip for remote data cloud.
     last_enquiry = {}
     network = {}
 
@@ -57,7 +56,6 @@ class DataCenter(dict):
                 light[key] = self.vanila_light[key]
         return light
 
-
     @property
     def light_codes(self):
         return from_light_to_codes(self.vanila_light)
@@ -67,13 +65,27 @@ class DataCenter(dict):
         return {self.network.get("address"): {"status":self.vanila_status, "light": self.vanila_light}}
 
     @property
+    def status_to_upload(self):
+        return {self.network.get("address"): {self.vanila_status}
+
+    @property
+    def light_to_upload(self):
+        return {self.network.get("address"): self.vanila_light}
+
+    @property
+    def temp_to_upload(self):
+        result={}
+        for key,module in self.vanila_status.items():
+            result[key]=module.get("temp_hum")
+        return {self.network.get("address"):result}
+
+    @property
     def commands(self):
         "这是用来恢复灯光的。不在线的就不管了。"
         return from_light_to_executables(self.online_light, self.vanila_status)
 
-
-
     @property
+    # 判断是否模块全部在线。状态。
     def all_loaded(self):
         if len(self.vanila_status)==0:
             return False
@@ -107,7 +119,6 @@ class DataCenter(dict):
 
     def save_host(self):
         with open(setting.backup_host, "w") as file:
-            # set is not serializable. It need to be converted to list.
             print("hosts to save in file===>")
             print(json.dumps(self.host))
             file.write(json.dumps(self.host))

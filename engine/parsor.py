@@ -184,5 +184,6 @@ def generate(raw_a, raw_b, raw_c,raw_d):
     data_a["temp_hum"] = data_c
     # 只有有标签的才算。没标签的U位就不算了。这个应该是嵌入式的问题。
     data_a["alert"]=[i for i in data_d if i in data_a["available"]]
+    data_a.pop("available",None)
     print("parsed",data_a)
     return data_a
