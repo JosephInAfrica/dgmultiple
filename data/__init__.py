@@ -40,7 +40,7 @@ class DataCenter(dict):
     def vanila_temp(self):
         result={}
         for key,module in self.vanila_status.items():
-            result[key]=module.get("temp_hum")
+            result[key]=module.get("temp_hum")[:setting.temp_amount]
         return result
 
     def __init__(self):

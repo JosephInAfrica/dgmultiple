@@ -71,7 +71,7 @@ class BaseConfig:
     regular_log = join(logsdir, "regular.log")
     uvariation_log = join(logsdir, "uvariation.log")
     error_log = join(logsdir, "error.log")
-    temp_amount=6
+    temp_amount=1
     temp_hum_nos = [(10, 11, 12), (13, 14, 15)]
     interval = 0.6
     write_interval=1.2

@@ -39,6 +39,7 @@ class DataFeeder(object):
         self.run_command(init_temp(setting.module_amount,setting.temp_amount))
         dataCenter.vanila_status, _, _ = yield self.stroke()
         self.on_re_onshelf()
+        print("feed initiliazed")
 
     def run_command(self, codes):
         self.commandList.extend(codes)
@@ -48,12 +49,8 @@ class DataFeeder(object):
         if not setting.upload:
             print("not allowed to upload")
             return
-        # print("trying to update status!!")
-        # print("dataCenter.host",dataCenter.host)
-        # print("setting.url_update",setting.url_status)
-        # print("dataCenter.to_upload",dataCenter.to_upload)
+
         yield upload(dataCenter.host,setting.url_status,dataCenter.to_upload)
-        # print("status updated==>",results)
 
     @gen.coroutine
     def upload_temp(self):
@@ -62,7 +59,6 @@ class DataFeeder(object):
             return
         rlog("upload temp!!")
         yield upload(dataCenter.host,setting.url_temp,dataCenter.temp_to_upload)
-        # print("temp uploaded==>",results)
 
     @gen.coroutine
     def heart_beat(self):
@@ -73,7 +69,6 @@ class DataFeeder(object):
             yield gen.sleep(setting.heartbeat_interval)
             beat = {"heartBeat": dataCenter.network.get("address")}
             results = yield upload(dataCenter.host,setting.url_heartbeat,beat)
-            # results=yield upload(dataCenter.host)
             print("heart beat done==>")
 
 
@@ -115,7 +110,7 @@ class DataFeeder(object):
     @gen.coroutine
     def stroke(self,online_only=0):
         "这个stroke是取数据冲程。"
-        print("strike!!!")
+        # print("strike")
         def valid(t):
             # check if every temp hum is valid.
             for i in t[:3]:
@@ -183,25 +178,21 @@ class DataFeeder(object):
 
             dataCenter.vanila_status[module_id] = result
 
-# 这里改了一下缩进。不管是否变化，是否有历史记录，都会更新dataCenter.
-        # 这里gen.return只有一个值。
-        print("strike result",models,updated,temp_updated)
         raise gen.Return((models, updated, temp_updated))
 
 
     @gen.coroutine
     def strokes(self,online_only=0):
         # 所有的冲程。包括取数据，比对，触发各种勾子（重新上线，数据更新）
-        print("start strokes!!!\n")
         old_modules = dataCenter.vanila_status.keys()
         dataCenter.vanila_status, updated, temp_updated = yield self.stroke(online_only=online_only)
-        # print("Vanila_status",dataCenter.vanila_status)
-        print("updated:",updated)
-        print("temp_updated:",temp_updated)
-        # if updated:
-        yield self.upload_status()
-        # if temp_updated:
-        yield self.upload_temp()
+
+        if updated:
+            print("updated:",updated)
+            yield self.upload_status()
+        if temp_updated:
+            print("temp_updated:",temp_updated)
+            yield self.upload_temp()
         new_modules = dataCenter.vanila_status.keys()
         re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
 
@@ -221,7 +212,7 @@ class DataFeeder(object):
                     print("all modules dropped.sleeping....")
                     for i in range(setting.resume_delay):
                         time.sleep(1)
-                    # time.sleep(setting.resume_delay)
+
                         print("%s seconds left"%(setting.resume_delay-i))
                     print("resume work")              
                     yield self.strokes(online_only=0)
