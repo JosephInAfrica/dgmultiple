@@ -87,7 +87,7 @@ def status_light(vanila_status, vanila_light, registered_modules, upsidedown=Tru
     for module_id, module_content in vanila_status.items():
         u_count = module_content.get("u_count")
         u_status = module_content.get('status')
-        available = module_content.get("available")
+        available = module_content.get("status").keys()
 
         data0 = {"u_id": module_id, "u_count": u_count, "u_power": 0}
 

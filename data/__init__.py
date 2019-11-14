@@ -36,6 +36,13 @@ class DataCenter(dict):
     last_enquiry = {}
     network = {}
 
+    @property
+    def vanila_temp(self):
+        result={}
+        for key,module in self.vanila_status.items():
+            result[key]=module.get("temp_hum")
+        return result
+
     def __init__(self):
         print("尝试初始化数据中心")
         recover_light(self)
@@ -66,7 +73,7 @@ class DataCenter(dict):
 
     @property
     def status_to_upload(self):
-        return {self.network.get("address"): {self.vanila_status}
+        return {self.network.get("address"): self.vanila_status}
 
     @property
     def light_to_upload(self):
@@ -74,10 +81,7 @@ class DataCenter(dict):
 
     @property
     def temp_to_upload(self):
-        result={}
-        for key,module in self.vanila_status.items():
-            result[key]=module.get("temp_hum")
-        return {self.network.get("address"):result}
+        return {self.network.get("address"):self.vanila_temp}
 
     @property
     def commands(self):

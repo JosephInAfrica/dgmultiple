@@ -9,7 +9,7 @@ from setting import tornado_setting
 from setting import setting
 import logging
 from loggers import elog
-
+from data import dataCenter
 
 class WebThread(Thread):
 
@@ -56,3 +56,4 @@ if __name__ == '__main__':
     else:
         print("heart_beat turned off")
     FeedThread().start()
+    # print("status==>",dataCenter.host,setting.url_update,dataCenter.to_upload)
