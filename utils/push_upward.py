@@ -16,35 +16,32 @@ from data import dataCenter
 
 @coroutine
 def upload(uri, address, content):
+    print("req to post==>", content)
     client = AsyncHTTPClient()
     h = HTTPHeaders({"Content-Type": "application/json"})
     req = HTTPRequest(url="http://" + uri + address, method="POST", body=json.dumps(content), headers=h,request_timeout=setting.request_timeout)
-    print("req to post==>", content)
-
-    try:
-        response = yield client.fetch(req)
-    except Exception as e:
-        print(e.__repr__())
-        raise gen.Return({"status":-1,"uri": uri})
-    if response.code != 200:
-        raise gen.Return({"status":-2,"uri": uri})
-    else:
-        raise gen.Return({"status":1,uri:content})
+    response = yield client.fetch(req)
+    print("uploaded!!<address %s>"%address)
 
 
-@coroutine
-def update(uri, content):
-    result=yield push_single(uri, setting.url_update, content)
-    raise gen.Return(result)
+    # print("<><><>")
+    # raise gen.Return(response)    
+    # except Exception as e:
+    #     print(e.__repr__())
+    #     raise gen.Return({"status":-1,"uri": uri})
+    # if response.code != 200:
+    #     raise gen.Return({"status":-2,"uri": uri})
+    # else:
+    #     raise gen.Return({"status":1,uri:content})
 
 
-@coroutine
-def heart_beat(uri):
-    result=yield push_single(uri, setting.url_heartbeat, content={"heartBeat": setting.network.get("address")})
-    raise gen.Return(result)
+# @coroutine
+# def upload2(uri, address, content):
+#     print("req to post==>", content)
+#     client = AsyncHTTPClient()
+#     h = HTTPHeaders({"Content-Type": "application/json"})
+#     req = HTTPRequest(url="http://" + uri + address, method="POST", body=json.dumps(content), headers=h,request_timeout=setting.request_timeout)
 
 
-@coroutine
-def upload_temp(uri,content):
-    result=yield push_single(uri,setting.url_temp,content)
-    raise gen.Return(result)
+#     response = yield client.fetch(req)
+#     print("uploaded!!<address %s>"%address)

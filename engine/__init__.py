@@ -10,7 +10,7 @@ from serial_enquiry import modify_str, write_enquiry, Codes
 from data import dataCenter
 from check_module import check_module
 from watch_modules import watch_modules
-from utils.push_upward import upload, heart_beat as _heart_beat, update as _update,upload_temp as _upload_temp
+# from utils.push_upward import upload
 import json
 from codes.temp_hum import init_temp
 codes = [Codes(i) for i in range(1, setting.module_amount + 1)]
@@ -38,7 +38,8 @@ class DataFeeder(object):
         self.run_command(init_temp(setting.module_amount,setting.temp_amount))
         dataCenter.vanila_status, _, _ = yield self.stroke()
         rlog("trying to update for first time")
-        yield self.on_data_update()
+        # yield self.upload_status()
+        # yield self.upload_temp()
         rlog("updated")
         self.on_re_onshelf()
 
@@ -47,19 +48,24 @@ class DataFeeder(object):
 
     @gen.coroutine
     def upload_status(self):
-        print("trying to update!!")
+        if not setting.upload:
+            print("not allowed to upload")
+            return
+        print("trying to update status!!")
         yield upload(dataCenter.host,setting.url_update,dataCenter.to_upload)
-
+        # print("status updated==>",results)
 
     @gen.coroutine
     def upload_temp(self):
+        if not setting.upload:
+            print("not allowed to upload")
+            return
         print("upload temp!!")
         yield upload(dataCenter.host,setting.url_temp,dataCenter.temp_to_upload)
+        # print("temp uploaded==>",results)
 
-        
     @gen.coroutine
     def heart_beat(self):
-        # constantly heart beat. 受设置的控制。如果设置关的，无法热启动。
         if not setting.heart_beat:
             print("heart beat off.")
             return
@@ -67,15 +73,8 @@ class DataFeeder(object):
             yield gen.sleep(setting.heartbeat_interval)
             beat = {"heartBeat": dataCenter.network.get("address")}
             results = yield upload(dataCenter.host,setting.url_heartbeat,beat)
-            print("heart beat done==>", results)
+            print("heart beat done==>")
 
-    @gen.coroutine
-    def on_startup(self):
-        # 刚开机。所有模块上架。
-        yield self.upload_status()
-        yield self.upload_status()
-        # if error:
-        #     elogger.exception(err)
 
     def on_re_onshelf(self):
         # 目前只有下发命令的功能 。
@@ -111,33 +110,32 @@ class DataFeeder(object):
     def after_stroke(self):
         pass
 
-    @gen.coroutine
-    def on_data_update(self):
-        rlog("data updated...\n\n\n")
-        rlog(dataCenter.vanila_status)
-        if not setting.upload:
-            print("update switched off")
-            return
-        if not dataCenter.host:
-            print("no host to update to")
-            return
-        yield self.upload_status()
+    # @gen.coroutine
+    # def on_data_update(self):
+    #     if not setting.upload:
+    #         print("update switched off")
+    #         return
+    #     if not dataCenter.host:
+    #         print("no host to update to")
+    #         return
+    #     yield self.upload_status()
 
-    @gen.coroutine
-    def on_temp_update(self):
-        rlog("temp updating")
-        if not setting.upload:
-            print("update switched off")
-            return
-        if not dataCenter.host:
-            print("no host to update to")
-            return
-        yield self.upload_temp()
+    # @gen.coroutine
+    # def on_temp_update(self):
+    #     rlog("temp updating")
+    #     if not setting.upload:
+    #         print("update switched off")
+    #         return
+    #     if not dataCenter.host:
+    #         print("no host to update to")
+    #         return
+    #     yield self.upload_temp()
 
 
     @gen.coroutine
     def stroke(self,online_only=0):
         "这个stroke是取数据冲程。"
+        print("strike!!!")
         def valid(t):
             # check if every temp hum is valid.
             for i in t[:3]:
@@ -207,19 +205,23 @@ class DataFeeder(object):
 
 # 这里改了一下缩进。不管是否变化，是否有历史记录，都会更新dataCenter.
         # 这里gen.return只有一个值。
+        print("strike result",models,updated,temp_updated)
         raise gen.Return((models, updated, temp_updated))
 
 
     @gen.coroutine
     def strokes(self,online_only=0):
         # 所有的冲程。包括取数据，比对，触发各种勾子（重新上线，数据更新）
+        print("start strokes!!!\n")
         old_modules = dataCenter.vanila_status.keys()
         dataCenter.vanila_status, updated, temp_updated = yield self.stroke(online_only=online_only)
-
-        if updated:
-            yield self.on_data_update()
-        if temp_updated:
-            yield self.on_temp_update()
+        print("Vanila_status",dataCenter.vanila_status)
+        print("updated:",updated)
+        print("temp_updated:",temp_updated)
+        # if updated:
+        yield self.upload_status()
+        # if temp_updated:
+        yield self.upload_temp()
         new_modules = dataCenter.vanila_status.keys()
         re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
 
