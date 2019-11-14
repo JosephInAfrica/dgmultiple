@@ -15,32 +15,18 @@ def map_hex(x):
     y = b"00%s" % y[2:]
     return y[-2:].upper()
 
-
-# def map_dec(x):
-#     "将 一个 \x0a 转成好看的10进制数"
-#     y = hex(ord(x))
-#     y = b"00%s" % y[2:]
-#     return y[-2:].upper()
-
-
 def _fromb(raw_b):
     "返回两个元素的元组,第一个是字符串，5个一组代表在线的模块信息;第二个是dict形式数据，{模块位置1:模块id1,模块位置x:模块idx....}"
 
-    # if not raw_b:
-    #     raise Exception('got abnormal raw_b data.Processing failed.')
 
     raw_b = raw_b[3:-2]
-    # 可能没有raw_b，或者raw_b是Future
-    # print("raw_b", raw_b)
+
     result = {chr(i): ''.join(
         raw_b[4 * i - 4:4 * i]) for i in range(1, 55)}
-    # print(result)
-
     status = {i: result[i]
               for i in result if result[i] != '\x00\x00\x00\x00'}
 
     status = {ord(i): treat_device_id(''.join(map(map_hex, status[i]))) for i in status}
-    # status_list = [{"id": i, "tag": status[i]}]
     return status
     # 返回两个数据，第一个是feed将来的生成code,第二个feed将来给人看的json.
 
@@ -67,17 +53,12 @@ def treat_device_id(id):
 def _froma(raw_a):
     "接收一个list还是16进制字符？结果一样吗？是的。"
     "return data_a,是一个3个元素的tuple,模块短id(4位),u数，模块数量。"
-    # if not raw_a:
-    #     raise Exception('got abnormal raw_a data.Processing failed.')
-    # print("raw_a", ' '.join([hex(ord(i)) for i in raw_a]))
+
+
     address = raw_a[6]
     module_id = raw_a[9:13]
-    # module_id = ''.join(raw_a[9:13])
-    # 修正 从第8 到第13 序号7-12都是id号。
     style = raw_a[14]
     version = raw_a[21:23]
-
-    # module_id = [hex(ord(i)) for i in module_id]
     indicators = raw_a[23:-2]
     available = [i + 1 for i in range(len(indicators)) if indicators[i] == '\x01']
     u_count = raw_a[4]
@@ -89,18 +70,12 @@ def _froma(raw_a):
     for_man = {"module_id": treat_moduleid(str(int(treat_raw_hex(module_id),16))), "available": available, "address": ord(address), "module_amount": ord(
         module_amount), "u_count": ord(u_count), "version": ''.join(map(map_hex, version))}
 
-
-    # for_man = {"module_id": treat_moduleid(''.join(map(map_hex, module_id))), "available": available, "address": ord(address), "module_amount": ord(
-    #     module_amount), "u_count": ord(u_count), "version": ''.join(map(map_hex, version))}
-
     return for_man
 
 
 
 def _fromc(raw_c):
-    # # print(' '.join([str(ord(i)) for i in raw_c]))
-    # if not raw_c:
-    #     raise Exception('got abnormal raw_c input.Processing failed.')
+
     if len(raw_c) != 53:
         raise Exception(' '.join([hex(ord(i))
                                   for i in raw_c]) + "==>Raw C abnormal")
@@ -182,8 +157,9 @@ def generate(raw_a, raw_b, raw_c,raw_d):
     data_b = {i: data_b[i] for i in data_b if i in data_a['available']}
     data_a['status'] = data_b
     data_a["temp_hum"] = data_c
-    # 只有有标签的才算。没标签的U位就不算了。这个应该是嵌入式的问题。
+    # 只有有标签的才算。没标签的`U位就不算了。这个应该是嵌入式的问题。
     data_a["alert"]=[i for i in data_d if i in data_a["available"]]
+    # available 好像不需要。去掉算了。
     data_a.pop("available",None)
-    print("parsed",data_a)
+    # print("parsed",data_a)
     return data_a

@@ -37,6 +37,7 @@ class BaseConfig:
     # 是否上传数据到数据平台。
     upload = 1
     # 是否上传心跳。
+    ip_config=ip_config
     heart_beat = 1
     # 有几节模块。设置多于实际节数也能用。但效率稍有影响。因为会尝试读不存在设备的地址.
     module_amount = 1
@@ -64,7 +65,7 @@ class BaseConfig:
 
     # 是否心跳。
     # 与数据平台对接：数据平台接收update和heartbeat相应uri.
-    url_update = "/update"
+    url_status = "/status"
     url_heartbeat = "/heartbeat"
     url_temp="/temp"
     regular_log = join(logsdir, "regular.log")
@@ -111,7 +112,7 @@ class TestConfig(BaseConfig):
     for_tencent=0
     upload = 1
     heart_beat = 1
-    module_amount = 2
+    module_amount = 1
     color_map=color16
     light_range = range(16)
     all_loaded_required = False

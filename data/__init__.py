@@ -66,7 +66,7 @@ class DataCenter(dict):
 
     @property
     def status_to_upload(self):
-        return {self.network.get("address"): {self.vanila_status}
+        return {self.network.get("address"): self.vanila_status}
 
     @property
     def light_to_upload(self):

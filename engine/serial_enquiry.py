@@ -99,7 +99,7 @@ def write_enquiry(ser, code, interval):
     if count > 0:
         recv = ser.read(count)
         if not verify(recv):
-            raise Exception('response %s for enquriy %s not crc16 verifed' % (''.join([map_output_hex(
+            raise Exception('response <%s> for enquriy <%s> not crc16 verifed' % (''.join([map_output_hex(
                 hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
 
         return recv

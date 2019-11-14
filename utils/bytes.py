@@ -5,13 +5,17 @@
 from setting import setting
 
 def map_hex(x):
-    "将 一个 \x0a 转成好看的16进制数0a 0x1"
+    "将 一个 \x0a 转成好看的16进制数0a 0x1、用于格式化串口的输出。"
     y = hex(ord(x))[2:]
     y = b"00%s" % y
     return y[-2:]
 
+def map_output(x):
+    "用来格式化大量输出。"
+    return " ".join([map_hex(i) for i in x])
+
 def ord_to_hex(x):
-    "生成2位好看的16进制"
+    "由小于256的十进制数生成2位好看的16进制，不足16的以0开头"
     result=("0%s"%(hex(x)[2:]))[-2:]
     return result
 

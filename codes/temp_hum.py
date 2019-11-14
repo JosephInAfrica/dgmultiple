@@ -15,17 +15,17 @@ class Code(object):
 
     @property    
     def code(self):
-        if amount==0:
-            result="%s0600080000"%ord_to_hex(address)
+        if self.amount==0:
+            result="%s0600080000"%ord_to_hex(self.address)
 
-            return "%s0600080000"%ord_to_hex(address)
+            return "%s0600080000"%ord_to_hex(self.address)
         else:
-            result="%s06000801%s"%(ord_to_hex(address),ord_to_hex(amount))
+            result="%s06000801%s"%(ord_to_hex(self.address),ord_to_hex(self.amount))
 
         return modify_str(result.decode("hex"))
 
     def __repr__(self):
-        return "<SetTempHum>[%s Sensors]"%self.amount
+        return "<SetTempHum>[address %s][%s Sensor]"%(self.address,self.amount)
 
 def temp_hum(raw):
     # 由raw_status/vanila_status数据，生成腾讯规定的温湿度数据。目前是每个机柜三个，分上中下。

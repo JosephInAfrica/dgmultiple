@@ -1,7 +1,7 @@
 #!encoding=utf8
 
 "for dataCenter initialization problems."
-from tools import purify_light
+from codes.status_light import purify_light
 import os
 from setting import setting
 from loggers import rlog, elog

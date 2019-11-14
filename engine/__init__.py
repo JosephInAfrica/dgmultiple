@@ -10,7 +10,7 @@ from serial_enquiry import modify_str, write_enquiry, Codes
 from data import dataCenter
 from check_module import check_module
 from watch_modules import watch_modules
-from utils.push_upward import heart_beat as _heart_beat, update as _update,upload_temp as _upload_temp
+from utils.push_upward import upload, heart_beat as _heart_beat, update as _update,upload_temp as _upload_temp
 import json
 from codes.temp_hum import init_temp
 codes = [Codes(i) for i in range(1, setting.module_amount + 1)]
@@ -46,16 +46,15 @@ class DataFeeder(object):
         self.commandList.extend(codes)
 
     @gen.coroutine
-    def update(self):
-        # 动作。上传。
+    def upload_status(self):
         print("trying to update!!")
-        yield _update(dataCenter.host, dataCenter.to_upload)
+        yield upload(dataCenter.host,setting.url_update,dataCenter.to_upload)
 
 
     @gen.coroutine
     def upload_temp(self):
         print("upload temp!!")
-        yield _upload_temp(dataCenter.host,dataCenter.temp_to_upload)
+        yield upload(dataCenter.host,setting.url_temp,dataCenter.temp_to_upload)
 
         
     @gen.coroutine
@@ -67,15 +66,16 @@ class DataFeeder(object):
         while 1:
             yield gen.sleep(setting.heartbeat_interval)
             beat = {"heartBeat": dataCenter.network.get("address")}
-            results = yield _heart_beat(dataCenter.host)
+            results = yield upload(dataCenter.host,setting.url_heartbeat,beat)
             print("heart beat done==>", results)
 
     @gen.coroutine
     def on_startup(self):
         # 刚开机。所有模块上架。
-        error = yield self.update()
-        if error:
-            elogger.exception(err)
+        yield self.upload_status()
+        yield self.upload_status()
+        # if error:
+        #     elogger.exception(err)
 
     def on_re_onshelf(self):
         # 目前只有下发命令的功能 。
@@ -121,7 +121,7 @@ class DataFeeder(object):
         if not dataCenter.host:
             print("no host to update to")
             return
-        yield self.update()
+        yield self.upload_status()
 
     @gen.coroutine
     def on_temp_update(self):
@@ -215,7 +215,7 @@ class DataFeeder(object):
         # 所有的冲程。包括取数据，比对，触发各种勾子（重新上线，数据更新）
         old_modules = dataCenter.vanila_status.keys()
         dataCenter.vanila_status, updated, temp_updated = yield self.stroke(online_only=online_only)
-        # print("vanila_status",dataCenter.vanila_status)
+
         if updated:
             yield self.on_data_update()
         if temp_updated:
@@ -225,8 +225,7 @@ class DataFeeder(object):
 
         if re_onshelf:
             self.on_re_onshelf()
-            # self.re_onshelf 是勾子，写重新上架的动作。
-        print("strokes====")
+
         self._runGivenCommand(all_loaded_required=setting.all_loaded_required)
 
 
