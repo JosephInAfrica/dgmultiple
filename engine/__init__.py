@@ -10,9 +10,10 @@ from serial_enquiry import modify_str, write_enquiry, Codes
 from data import dataCenter
 from check_module import check_module
 from watch_modules import watch_modules
-# from utils.push_upward import upload
+from utils.push_upward import upload
 import json
 from codes.temp_hum import init_temp
+
 codes = [Codes(i) for i in range(1, setting.module_amount + 1)]
 # 由设置模块数量来生成将要生成codes.
 def codes_online():
@@ -37,10 +38,6 @@ class DataFeeder(object):
         print("init temp modules.")
         self.run_command(init_temp(setting.module_amount,setting.temp_amount))
         dataCenter.vanila_status, _, _ = yield self.stroke()
-        rlog("trying to update for first time")
-        # yield self.upload_status()
-        # yield self.upload_temp()
-        rlog("updated")
         self.on_re_onshelf()
 
     def run_command(self, codes):
@@ -51,8 +48,11 @@ class DataFeeder(object):
         if not setting.upload:
             print("not allowed to upload")
             return
-        print("trying to update status!!")
-        yield upload(dataCenter.host,setting.url_update,dataCenter.to_upload)
+        # print("trying to update status!!")
+        # print("dataCenter.host",dataCenter.host)
+        # print("setting.url_update",setting.url_status)
+        # print("dataCenter.to_upload",dataCenter.to_upload)
+        yield upload(dataCenter.host,setting.url_status,dataCenter.to_upload)
         # print("status updated==>",results)
 
     @gen.coroutine
@@ -60,7 +60,7 @@ class DataFeeder(object):
         if not setting.upload:
             print("not allowed to upload")
             return
-        print("upload temp!!")
+        rlog("upload temp!!")
         yield upload(dataCenter.host,setting.url_temp,dataCenter.temp_to_upload)
         # print("temp uploaded==>",results)
 
@@ -73,6 +73,7 @@ class DataFeeder(object):
             yield gen.sleep(setting.heartbeat_interval)
             beat = {"heartBeat": dataCenter.network.get("address")}
             results = yield upload(dataCenter.host,setting.url_heartbeat,beat)
+            # results=yield upload(dataCenter.host)
             print("heart beat done==>")
 
 
@@ -109,27 +110,6 @@ class DataFeeder(object):
 
     def after_stroke(self):
         pass
-
-    # @gen.coroutine
-    # def on_data_update(self):
-    #     if not setting.upload:
-    #         print("update switched off")
-    #         return
-    #     if not dataCenter.host:
-    #         print("no host to update to")
-    #         return
-    #     yield self.upload_status()
-
-    # @gen.coroutine
-    # def on_temp_update(self):
-    #     rlog("temp updating")
-    #     if not setting.upload:
-    #         print("update switched off")
-    #         return
-    #     if not dataCenter.host:
-    #         print("no host to update to")
-    #         return
-    #     yield self.upload_temp()
 
 
     @gen.coroutine
@@ -215,7 +195,7 @@ class DataFeeder(object):
         print("start strokes!!!\n")
         old_modules = dataCenter.vanila_status.keys()
         dataCenter.vanila_status, updated, temp_updated = yield self.stroke(online_only=online_only)
-        print("Vanila_status",dataCenter.vanila_status)
+        # print("Vanila_status",dataCenter.vanila_status)
         print("updated:",updated)
         print("temp_updated:",temp_updated)
         # if updated:
