@@ -102,9 +102,8 @@ class DataFeeder(object):
                 try:
                     print('enquiring:', i)
                     feedback = write_enquiry(self._ser, i.code, setting.write_interval)
-                    success=(feedback==i.code)
-                    if not success:
-                        print("feedback,code", feedback,i.code,"\n")
+
+                    print("feedback,code", feedback,i.code,"\n")
                 except Exception as e:
                     feedback = e.__repr__()
                     print(feedback)
@@ -162,29 +161,31 @@ class DataFeeder(object):
                 dataCenter.temp_failure_count[module_id]=[0]*setting.temp_amount
 
             temp_updated=update_temp(temp,dataCenter.vanila_temp[module_id],dataCenter.temp_failure_count[module_id],setting.allow_temp_failure)
+            try:
+
+                result["temp_hum"]=dataCenter.vanila_temp[module_id]
+
+                status_modules[module_id] = result
+                temp_modules[module_id]=dataCenter.vanila_temp[module_id]
+
+                if dataCenter.vanila_status.get(module_id):
+
+                    if dataCenter.vanila_status[module_id]['status']!=result.get("status") or dataCenter.vanila_status[module_id]['alert']!=result.get("alert"):
+                        updated=1
+                else:
+                    updated = 1
 
 
-            result["temp_hum"]=dataCenter.vanila_temp[module_id]
-
-            status_modules[module_id] = result
-            temp_modules[module_id]=dataCenter.vanila_temp[module_id]
-
-            if dataCenter.vanila_status.get(module_id):
-
-                if dataCenter.vanila_status[module_id]['status']!=result.get("status") or dataCenter.vanila_status[module_id]['alert']!=result.get("alert"):
-                    updated=1
-            else:
-                updated = 1
-
-
-            dataCenter.vanila_status[module_id] = result
-
+                dataCenter.vanila_status[module_id] = result
+            except Exception as e:
+                elogger.exception(e)
         raise gen.Return((status_modules,temp_modules, updated, temp_updated))
 
 
     @gen.coroutine
     def strokes(self,online_only=0):
         # 所有的冲程。包括取数据，比对，触发各种勾子（重新上线，数据更新）
+        print("strike\n")
         old_modules = dataCenter.vanila_status.keys()
         dataCenter.vanila_status, dataCenter.vanila_temp,updated, temp_updated = yield self.stroke(online_only=online_only)
 
@@ -210,26 +211,23 @@ class DataFeeder(object):
     def run(self):
         "总的调度程序。先运行一遍所有的温湿度检测.不包括心跳了。为了控制时间精确，把心跳单独用一个线程了。"
 
-        try:
-            yield self.to_start_up()
-            while 1:
-                if setting.lazy_recover:
-                    if not dataCenter.online_modules:
-                        print("all modules dropped.sleeping....")
-                        for i in range(setting.resume_delay):
-                            time.sleep(1)
+        yield self.to_start_up()
+        while 1:
+            if setting.lazy_recover:
+                if not dataCenter.online_modules:
+                    print("all modules dropped.sleeping....")
+                    for i in range(setting.resume_delay):
+                        time.sleep(1)
 
-                            print("%s seconds left"%(setting.resume_delay-i))
-                        print("resume work")              
-                        yield self.strokes(online_only=0)
-                    if dataCenter.partly_online:
-                        l=len(dataCenter.online_address)
-                        for i in range(12//l):
-                            print("%s modules online.Checking online only.%s of %s times"%(l,i+1,12//l))
-                            yield self.strokes(online_only=1)
+                        print("%s seconds left"%(setting.resume_delay-i))
+                    print("resume work")              
+                    yield self.strokes(online_only=0)
+                if dataCenter.partly_online:
+                    l=len(dataCenter.online_address)
+                    for i in range(12//l):
+                        print("%s modules online.Checking online only.%s of %s times"%(l,i+1,12//l))
+                        yield self.strokes(online_only=1)
 
-                yield self.strokes(online_only=0)
+            yield self.strokes(online_only=0)
 
-        except Exception as e:
-            elogger.exception(e)
 dataFeeder = DataFeeder()

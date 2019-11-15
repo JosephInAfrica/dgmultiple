@@ -54,6 +54,9 @@ def temp_hum(raw):
     def tuple_to_dic(tp):
         # 将('29.34', '38.43', 10) 转化成 ｛"err_code":0,"t":29.34,"p":38.43},和是否数据正确。1代表没问题，0代表空数据。
         dic = {"err_code": 0}
+        if not tp:
+            dic = {"err_code": -121, "t": None, "h": None}
+            return (dic,0)
         if tp[2] == 0:
             dic = {"err_code": -121, "t": None, "h": None}
             return (dic, 0)

@@ -73,7 +73,7 @@ class ApiTencent(RequestHandler):
         try:
             action = self.get_argument("action")
             action = action.lower()
-            print(action)
+            # print(action)
         except Exception as e:
             self.write(json.dumps({"err_code": -2}))
             self.finish()
@@ -86,7 +86,7 @@ class ApiTencent(RequestHandler):
                 print(data)
             except Exception as e:
                 elog(e)
-                print(e)
+                # print(e)
                 self.write(json.dumps({"err_code": -3}))
                 self.finish()
 

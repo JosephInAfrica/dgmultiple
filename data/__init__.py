@@ -37,12 +37,6 @@ class DataCenter(dict):
     last_enquiry = {}
     network = {}
 
-    # @property
-    # def vanila_temp(self):
-    #     result={}
-    #     for key,module in self.vanila_status.items():
-    #         result[key]=module.get("temp_hum")[:setting.temp_amount]
-    #     return result
 
     def __init__(self):
         print("尝试初始化数据中心")

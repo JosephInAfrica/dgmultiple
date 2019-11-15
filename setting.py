@@ -61,7 +61,7 @@ class BaseConfig:
     backup_lightcodes = join(basedir, "backup_lightcodes.json")
     backup_host = join(basedir, "backup_host.json")
     # 允许温湿度读取失败多少次.
-    allow_temp_failure = 20
+    allow_temp_failure = 5
 
     # 是否心跳。
     # 与数据平台对接：数据平台接收update和heartbeat相应uri.
@@ -71,11 +71,11 @@ class BaseConfig:
     regular_log = join(logsdir, "regular.log")
     uvariation_log = join(logsdir, "uvariation.log")
     error_log = join(logsdir, "error.log")
-    temp_amount=1
+    temp_amount=3
     temp_hum_nos = [(10, 11, 12), (13, 14, 15)]
     interval = 0.6
     write_interval=1.2
-    write_repeat=2
+    write_repeat=1
     # 写灯光命令时，每写write_bunch个，就读一次stroke。避免长时间阻塞。
     write_bunch=10
     # 写命令
@@ -90,9 +90,9 @@ class RegularConfig(BaseConfig):
     for_tencent=0
     upload = 1
     heart_beat = 1
-    module_amount = 1
-    light_range = range(16)
-    color_map=color16
+    module_amount = 4
+    light_range = range(4)
+    color_map=color4
     all_loaded_required = True
     lazy_recover=True
 
@@ -112,7 +112,7 @@ class TestConfig(BaseConfig):
     for_tencent=0
     upload = 1
     heart_beat = 1
-    module_amount = 1
+    module_amount = 6
     color_map=color16
     light_range = range(16)
     all_loaded_required = False

@@ -16,7 +16,7 @@ from data import dataCenter
 
 @coroutine
 def upload(uri, address, content):
-    print("req to post==>", content)
+    print("<uri: %s>==><content: %s>"%(uri,content))
     client = AsyncHTTPClient()
     h = HTTPHeaders({"Content-Type": "application/json"})
     req = HTTPRequest(url="http://" + uri + address, method="POST", body=json.dumps(content), headers=h,request_timeout=setting.request_timeout)
