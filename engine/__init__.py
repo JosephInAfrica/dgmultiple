@@ -35,7 +35,7 @@ class DataFeeder(object):
 
     @gen.coroutine
     def to_start_up(self):
-        self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=0.6)
+        self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=1)
         print("init temp modules.")
         self.run_command(init_temp(setting.module_amount,setting.temp_amount))
 
@@ -185,7 +185,7 @@ class DataFeeder(object):
     @gen.coroutine
     def strokes(self,online_only=0):
         # 所有的冲程。包括取数据，比对，触发各种勾子（重新上线，数据更新）
-        print("strike\n")
+        # print("strike\n")
         old_modules = dataCenter.vanila_status.keys()
         dataCenter.vanila_status, dataCenter.vanila_temp,updated, temp_updated = yield self.stroke(online_only=online_only)
 

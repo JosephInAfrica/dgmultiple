@@ -112,12 +112,12 @@ class TestConfig(BaseConfig):
     for_tencent=0
     upload = 1
     heart_beat = 1
-    module_amount = 6
-    color_map=color16
-    light_range = range(16)
+    module_amount = 1
+    color_map=color4
+    light_range = range(4)
     all_loaded_required = False
     lazy_recover=False
-    temp_amount=1
+    temp_amount=3
     # 每个模块温湿度模块个数
 
 class setting(TestConfig):
