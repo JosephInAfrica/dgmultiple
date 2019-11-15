@@ -13,6 +13,7 @@ from watch_modules import watch_modules
 from utils.push_upward import upload
 import json
 from codes.temp_hum import init_temp
+from cache_temp import update_temp
 
 codes = [Codes(i) for i in range(1, setting.module_amount + 1)]
 # 由设置模块数量来生成将要生成codes.
@@ -37,7 +38,11 @@ class DataFeeder(object):
         self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=0.6)
         print("init temp modules.")
         self.run_command(init_temp(setting.module_amount,setting.temp_amount))
-        dataCenter.vanila_status, _, _ = yield self.stroke()
+
+        dataCenter.vanila_status, dataCenter.vanila_temp,_, _ = yield self.stroke()
+
+        self.upload_status()
+        self.upload_temp()
         self.on_re_onshelf()
         print("feed initiliazed")
 
@@ -74,6 +79,8 @@ class DataFeeder(object):
 
     def on_re_onshelf(self):
         # 目前只有下发命令的功能 。
+        # 这个是把灯光重新加载一遍。
+
         self.run_command(dataCenter.commands)
 
     def _runGivenCommand(self, all_loaded_required=True):
@@ -118,7 +125,8 @@ class DataFeeder(object):
                     return 0
             return 1
 
-        models = {}
+        status_modules = {}
+        temp_modules={}
         # 除temp以外所有的
         updated = 0
         temp_updated = 0
@@ -128,64 +136,57 @@ class DataFeeder(object):
             codes_to_check=codes_online()
         else:
             codes_to_check=[code.codes for code in codes]
+
+
+
         for code in codes_to_check:
+            # 检查每一个module
 
             try:
                 result = check_module(self._ser, code)
             except Exception as e:
                 result = {}
                 elogger.exception(e)
+                continue
 
             module_id = result.get('module_id')
 
-            if not module_id:
-                continue
-
             dataCenter.registered_modules.add(module_id)
-            temp = result.get("temp_hum")
-            if valid(temp):
-                dataCenter.temp[module_id] = temp
-                dataCenter.temp_failure_count[module_id] = 0
-            else:
-                # 修正缓存。
-                if dataCenter.temp_failure_count.get(module_id):
-                    dataCenter.temp_failure_count[module_id] += 1
-                else:
-                    dataCenter.temp_failure_count[module_id] = 1
 
-                if dataCenter.temp_failure_count[module_id] < setting.allow_temp_failure:
-                    # 如果失败次数在允许范围内。
+#  更新一下temp.tempt
+            temp = result.get("temp_hum")[:setting.temp_amount]
+#  如果没有缓存，建立新的。
+            if not dataCenter.vanila_temp.get(module_id):
+                dataCenter.vanila_temp[module_id]=[None]*setting.temp_amount
+            if not dataCenter.temp_failure_count.get(module_id):
+                dataCenter.temp_failure_count[module_id]=[0]*setting.temp_amount
 
-                    # 如果没有缓存:如果有缓存.
-                    if not dataCenter.temp.get(module_id):
-                        # rlog("%s no temp cache for reference." % module_id)
-                        pass
-                    else:
-                        rlog("%s using cached temp. Failed %s times." % (module_id, dataCenter.temp_failure_count[module_id]))
-                        result["temp_hum"] = dataCenter.temp[module_id]
+            temp_updated=update_temp(temp,dataCenter.vanila_temp[module_id],dataCenter.temp_failure_count[module_id],setting.allow_temp_failure)
 
-                else:
-                    pass
-            models[module_id] = result
+
+            result["temp_hum"]=dataCenter.vanila_temp[module_id]
+
+            status_modules[module_id] = result
+            temp_modules[module_id]=dataCenter.vanila_temp[module_id]
+
             if dataCenter.vanila_status.get(module_id):
-                if dataCenter.vanila_status[module_id]['temp_hum'] != result.get("temp_hum"):
-                    temp_updated = 1
+
                 if dataCenter.vanila_status[module_id]['status']!=result.get("status") or dataCenter.vanila_status[module_id]['alert']!=result.get("alert"):
                     updated=1
             else:
                 updated = 1
-                temp_updated=1
+
 
             dataCenter.vanila_status[module_id] = result
 
-        raise gen.Return((models, updated, temp_updated))
+        raise gen.Return((status_modules,temp_modules, updated, temp_updated))
 
 
     @gen.coroutine
     def strokes(self,online_only=0):
         # 所有的冲程。包括取数据，比对，触发各种勾子（重新上线，数据更新）
         old_modules = dataCenter.vanila_status.keys()
-        dataCenter.vanila_status, updated, temp_updated = yield self.stroke(online_only=online_only)
+        dataCenter.vanila_status, dataCenter.vanila_temp,updated, temp_updated = yield self.stroke(online_only=online_only)
 
         if updated:
             print("updated:",updated)
@@ -193,9 +194,12 @@ class DataFeeder(object):
         if temp_updated:
             print("temp_updated:",temp_updated)
             yield self.upload_temp()
+
         new_modules = dataCenter.vanila_status.keys()
         re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
 
+
+        # 这里触发重新上架
         if re_onshelf:
             self.on_re_onshelf()
 
@@ -205,23 +209,27 @@ class DataFeeder(object):
     @gen.coroutine
     def run(self):
         "总的调度程序。先运行一遍所有的温湿度检测.不包括心跳了。为了控制时间精确，把心跳单独用一个线程了。"
-        yield self.to_start_up()
-        while 1:
-            if setting.lazy_recover:
-                if not dataCenter.online_modules:
-                    print("all modules dropped.sleeping....")
-                    for i in range(setting.resume_delay):
-                        time.sleep(1)
 
-                        print("%s seconds left"%(setting.resume_delay-i))
-                    print("resume work")              
-                    yield self.strokes(online_only=0)
-                if dataCenter.partly_online:
-                    l=len(dataCenter.online_address)
-                    for i in range(12//l):
-                        print("%s modules online.Checking online only.%s of %s times"%(l,i+1,12//l))
-                        yield self.strokes(online_only=1)
-            yield self.strokes(online_only=0)
+        try:
+            yield self.to_start_up()
+            while 1:
+                if setting.lazy_recover:
+                    if not dataCenter.online_modules:
+                        print("all modules dropped.sleeping....")
+                        for i in range(setting.resume_delay):
+                            time.sleep(1)
 
+                            print("%s seconds left"%(setting.resume_delay-i))
+                        print("resume work")              
+                        yield self.strokes(online_only=0)
+                    if dataCenter.partly_online:
+                        l=len(dataCenter.online_address)
+                        for i in range(12//l):
+                            print("%s modules online.Checking online only.%s of %s times"%(l,i+1,12//l))
+                            yield self.strokes(online_only=1)
 
+                yield self.strokes(online_only=0)
+
+        except Exception as e:
+            elogger.exception(e)
 dataFeeder = DataFeeder()

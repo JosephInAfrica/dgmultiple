@@ -27,6 +27,7 @@ class DataCenter(dict):
     _instance = None
     vanila_status = {}
     vanila_light = {}
+    vanila_temp={}
     blink_freq = {}
     temp = {}
     temp_failure_count = {}
@@ -36,12 +37,12 @@ class DataCenter(dict):
     last_enquiry = {}
     network = {}
 
-    @property
-    def vanila_temp(self):
-        result={}
-        for key,module in self.vanila_status.items():
-            result[key]=module.get("temp_hum")[:setting.temp_amount]
-        return result
+    # @property
+    # def vanila_temp(self):
+    #     result={}
+    #     for key,module in self.vanila_status.items():
+    #         result[key]=module.get("temp_hum")[:setting.temp_amount]
+    #     return result
 
     def __init__(self):
         print("尝试初始化数据中心")

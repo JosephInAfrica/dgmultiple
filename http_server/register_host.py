@@ -48,6 +48,7 @@ class RegisterHost(RequestHandler):
             self.write(json.dumps({"message": "successfully changed remote platform from %s to %s" % (dataCenter.host, host)}))
             dataCenter.host = host
             dataFeeder.upload_status()
+            dataFeeder.upload_temp()
             self.finish()
         else:
             dataCenter.host = host

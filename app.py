@@ -51,9 +51,10 @@ class HeartBeater(Thread):
 
 if __name__ == '__main__':
     WebThread().start()
-    if setting.heart_beat:
-        HeartBeater().start()
-    else:
-        print("heart_beat turned off")
-    FeedThread().start()
+    # if setting.heart_beat:
+    #     HeartBeater().start()
+    # else:
+    #     print("heart_beat turned off")
+    # FeedThread().start()
+    dataFeeder.run()
     # print("status==>",dataCenter.host,setting.url_update,dataCenter.to_upload)

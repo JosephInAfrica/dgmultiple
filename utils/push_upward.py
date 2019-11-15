@@ -20,5 +20,9 @@ def upload(uri, address, content):
     client = AsyncHTTPClient()
     h = HTTPHeaders({"Content-Type": "application/json"})
     req = HTTPRequest(url="http://" + uri + address, method="POST", body=json.dumps(content), headers=h,request_timeout=setting.request_timeout)
-    yield client.fetch(req)
-    print("uploaded!!<address %s>"%address)
+    try:
+        yield client.fetch(req)
+        print("uploaded!!<address %s>"%address)
+    except Exception as e:
+        elogger.exception(e)
+        print("upload failed!!<address %s>"%address)
