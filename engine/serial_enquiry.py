@@ -62,17 +62,16 @@ def write_enquiry(ser, code, interval):
                         map_long(code))
         
 
-# def write_enquiry(ser, code, interval):
-#     ser.write(code)
+def write_enquiry_fast(ser, code):
+    ser.write(code)
    
-#     recv = ser.read(8)
-#     if not verify(recv):
-#         raise Exception('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
-#             hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
+    recv = ser.read(8)
+    if not verify(recv):
+        raise Exception('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
+            hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
 
-#         return recv
-#     else:
-#         return recv
+    return recv
+
         
 
 

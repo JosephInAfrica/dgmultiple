@@ -6,7 +6,7 @@ from tornado import gen
 from tornado.ioloop import IOLoop
 from setting import setting
 from loggers import elogger, rlogger, rlog, elog
-from serial_enquiry import modify_str, write_enquiry, Codes
+from serial_enquiry import modify_str, write_enquiry,write_enquiry_fast, Codes
 from data import dataCenter
 from check_module import check_module
 from watch_modules import watch_modules
@@ -14,6 +14,7 @@ from utils.push_upward import upload
 import json
 from codes.temp_hum import init_temp
 from cache_temp import update_temp
+from utils.bytes import map_long 
 
 codes = [Codes(i) for i in range(1, setting.module_amount + 1)]
 # 由设置模块数量来生成将要生成codes.
@@ -101,9 +102,12 @@ class DataFeeder(object):
             for time in range(setting.write_repeat):
                 try:
                     print('enquiring:', i)
-                    feedback = write_enquiry(self._ser, i.code, setting.write_interval)
+                    if setting.write_enqury_fast:
+                        feedback = write_enquiry_fast(self._ser, i.code, setting.write_interval)
+                    else:
+                        feedback = write_enquiry(self._ser, i.code, setting.write_interval)
 
-                    print("feedback,code", feedback,i.code,"\n")
+                    print("feedback||code||same", map_long(feedback),"||",map_long(i.code),feedback==i.code)
                 except Exception as e:
                     feedback = e.__repr__()
                     print(feedback)
@@ -150,7 +154,7 @@ class DataFeeder(object):
 
             module_id = result.get('module_id')
 
-            dataCenter.registered_modules.add(module_id)
+            dataCenter.registered_modules[module_id]=result.get("u_count")
 
 #  更新一下temp.tempt
             temp = result.get("temp_hum")[:setting.temp_amount]
@@ -186,25 +190,29 @@ class DataFeeder(object):
     def strokes(self,online_only=0):
         # 所有的冲程。包括取数据，比对，触发各种勾子（重新上线，数据更新）
         # print("strike\n")
-        old_modules = dataCenter.vanila_status.keys()
-        dataCenter.vanila_status, dataCenter.vanila_temp,updated, temp_updated = yield self.stroke(online_only=online_only)
+        try:
 
-        if updated:
-            print("updated:",updated)
-            yield self.upload_status()
-        if temp_updated:
-            print("temp_updated:",temp_updated)
-            yield self.upload_temp()
+            old_modules = dataCenter.vanila_status.keys()
+            dataCenter.vanila_status, dataCenter.vanila_temp,updated, temp_updated = yield self.stroke(online_only=online_only)
 
-        new_modules = dataCenter.vanila_status.keys()
-        re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
+            if updated:
+                print("updated:",updated)
+                yield self.upload_status()
+            if temp_updated:
+                print("temp_updated:",temp_updated)
+                yield self.upload_temp()
+
+            new_modules = dataCenter.vanila_status.keys()
+            re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
 
 
-        # 这里触发重新上架
-        if re_onshelf:
-            self.on_re_onshelf()
+            # 这里触发重新上架
+            if re_onshelf:
+                self.on_re_onshelf()
 
-        self._runGivenCommand(all_loaded_required=setting.all_loaded_required)
+            self._runGivenCommand(all_loaded_required=setting.all_loaded_required)
+        except Exception as e:
+            elogger.exception(e)
 
 
     @gen.coroutine

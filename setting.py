@@ -74,7 +74,7 @@ class BaseConfig:
     temp_amount=3
     temp_hum_nos = [(10, 11, 12), (13, 14, 15)]
     interval = 0.6
-    write_interval=1.2
+    write_interval=0.4
     write_repeat=1
     # 写灯光命令时，每写write_bunch个，就读一次stroke。避免长时间阻塞。
     write_bunch=10
@@ -82,7 +82,7 @@ class BaseConfig:
     startup_delay=6
     # 当所有模块都掉线时，多长时间以后重新检测。
     # 上传超时时间
-    request_timeout=3
+    request_timeout=20
 
     # 每个模块温湿度模块个数
 
@@ -120,7 +120,47 @@ class TestConfig(BaseConfig):
     temp_amount=3
     # 每个模块温湿度模块个数
 
-class setting(TestConfig):
+class Test72(BaseConfig):
+    for_tencent=0
+    upload = 1
+    heart_beat = 1
+    module_amount = 1
+    color_map=color4
+    light_range = range(4)
+    all_loaded_required = False
+    lazy_recover=False
+    temp_amount=3
+    write_interval=1
+    write_repeat=1
+    # 每个模块温湿度模块个数
+
+class Test71(BaseConfig):
+    for_tencent=0
+    upload = 1
+    heart_beat = 1
+    module_amount = 1
+    color_map=color4
+    light_range = range(4)
+    all_loaded_required = False
+    lazy_recover=False
+    temp_amount=3
+    write_enquiry_fast=1
+    # 每个模块温湿度模块个数
+
+class Test77(BaseConfig):
+    for_tencent=0
+    upload = 1
+    heart_beat = 1
+    module_amount = 4
+    color_map=color4
+    light_range = range(4)
+    all_loaded_required = True
+    lazy_recover=False
+    temp_amount=3
+    write_enquiry_fast=1
+    # 每个模块温湿度模块个数
+
+class setting(Test77):
     pass
 
 

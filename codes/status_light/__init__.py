@@ -69,7 +69,7 @@ def treat_post(dic, raw_light, raw_status, light_range):
 
 
 def status_light(vanila_status, vanila_light, registered_modules, upsidedown=True):
-    # 把现有数据转化成api的样子。传入vanila status和vanila light.
+    # 把现有数据转化成api的样子。传入vanila status和vanila light.regisetered_modules={<module_id>:<u_count>}
     # vanila_light.{"u123":{1:0,2:1}}
 
     tencent = {}
@@ -98,10 +98,10 @@ def status_light(vanila_status, vanila_light, registered_modules, upsidedown=Tru
         data0['u_status'].extend(status)
         data.append(data0)
 
-    for module_id in registered_modules:
+    for module_id,u_count in registered_modules.items():
         if module_id in vanila_status.keys():
             continue
-        data0 = {"u_id": module_id, "u_count": 42, "u_power": 0, "u_status": None}
+        data0 = {"u_id": module_id, "u_count": 42, "u_power": u_count, "u_status": None}
         print('dropped module:', data0)
         data.append(data0)
 

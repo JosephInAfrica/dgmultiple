@@ -11,7 +11,7 @@ from tornado import gen
 from tornado.httputil import HTTPHeaders
 from setting import setting
 from data import dataCenter
-
+from time import time
 
 
 @coroutine
@@ -19,10 +19,18 @@ def upload(uri, address, content):
     print("<uri: %s>==><content: %s>"%(uri,content))
     client = AsyncHTTPClient()
     h = HTTPHeaders({"Content-Type": "application/json"})
-    req = HTTPRequest(url="http://" + uri + address, method="POST", body=json.dumps(content), headers=h,request_timeout=setting.request_timeout)
+
+    # req = HTTPRequest(url="http://" + uri + address, method="POST", body=json.dumps(content), headers=h,request_timeout=setting.request_timeout)
+
+ 
+    req = HTTPRequest(url="http://" + uri + address, method="POST", body=json.dumps(content), headers=h)
+
     try:
+        t0=time.now()
         yield client.fetch(req)
-        print("uploaded!!<address %s>"%address)
+        t1=time.now()
+        t=t1-t0
+        print("uploaded success!!<address %s><content %s><in %s s>"%(address,content,t))
     except Exception as e:
         elogger.exception(e)
-        print("upload failed!!<address %s>"%address)
+        print("upload failed!!<address %s><content %s>"%(address,content))

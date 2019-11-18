@@ -32,7 +32,8 @@ class DataCenter(dict):
     temp = {}
     temp_failure_count = {}
     codes_for_recovery = []
-    registered_modules = set()
+    # 目前设定为map,key是module_id,value是u_amount
+    registered_modules = {}
     host = ""
     last_enquiry = {}
     network = {}
