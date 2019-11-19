@@ -101,7 +101,7 @@ def status_light(vanila_status, vanila_light, registered_modules, upsidedown=Tru
     for module_id,u_count in registered_modules.items():
         if module_id in vanila_status.keys():
             continue
-        data0 = {"u_id": module_id, "u_count": 42, "u_power": u_count, "u_status": None}
+        data0 = {"u_id": module_id, "u_count": u_count, "u_power": 0, "u_status": None}
         print('dropped module:', data0)
         data.append(data0)
 

@@ -26,9 +26,9 @@ def upload(uri, address, content):
     req = HTTPRequest(url="http://" + uri + address, method="POST", body=json.dumps(content), headers=h)
 
     try:
-        t0=time.now()
+        t0=time()
         yield client.fetch(req)
-        t1=time.now()
+        t1=time()
         t=t1-t0
         print("uploaded success!!<address %s><content %s><in %s s>"%(address,content,t))
     except Exception as e:

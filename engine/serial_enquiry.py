@@ -43,7 +43,6 @@ def enquiry(ser, code, count):
     recv = ser.read(count)
     if not verify(recv):
         raise Exception('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
-
     return recv
 
 
@@ -54,29 +53,28 @@ def write_enquiry(ser, code, interval):
     if count > 0:
         recv = ser.read(count)
         if not verify(recv):
-            raise Exception('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
-
+            print('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
         return recv
+
     else:
-        raise Exception("enquriy for <%s> has no reply(0 length)" %
+        print("enquriy for <%s> has no reply(0 length)" %
                         map_long(code))
+        return ""
         
 
-def write_enquiry_fast(ser, code):
+def write_enquiry_fast(ser, code,interval):
+    time.sleep(interval)
+    t0=time.time()
     ser.write(code)
-   
     recv = ser.read(8)
+    t1=time.time()
+    print("write time spent <%ss>"%(t1-t0))
     if not verify(recv):
-        raise Exception('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
+        print('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
             hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
 
     return recv
 
-        
-
-
-# def verify(data):
-#     return crc16(data[:-2]) == data[-2:]
 
 
 def generate_code(module, position, colorCode):

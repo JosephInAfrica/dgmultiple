@@ -85,9 +85,6 @@ def _fromc(raw_c):
 
 
 def _fromd(raw_d):
-    # if not raw_d:
-    #     raise Exception("got abnormal raw_d input.Processing failed.")
-    # print("raw_d:",[ord(i) for i in raw_d])
     raw_d=raw_d[3:-2]
     raw_d=raw_d[1::2]
     # print("wanted",[ord(i) for i in raw_d])

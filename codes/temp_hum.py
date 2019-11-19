@@ -35,7 +35,7 @@ def temp_hum(raw):
         single = {"err_code": 0}
         single['u_id'] = key
 
-        temp_hums = value['temp_hum'][:3]
+        temp_hums = value[:3]
 
         top = tuple_to_dic(temp_hums[0])
         mid = tuple_to_dic(temp_hums[1])

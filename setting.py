@@ -12,7 +12,6 @@ basedir = abspath("/home/root/")
 ip_config = join(basedir, "ip.sh")
 def get_network_config():
     "从系统中读取到配置文件"
-    
 
     def parse(file):
         import re
@@ -71,11 +70,13 @@ class BaseConfig:
     regular_log = join(logsdir, "regular.log")
     uvariation_log = join(logsdir, "uvariation.log")
     error_log = join(logsdir, "error.log")
+    u_count=52
     temp_amount=3
     temp_hum_nos = [(10, 11, 12), (13, 14, 15)]
     interval = 0.6
     write_interval=0.4
     write_repeat=1
+    write_fast_delay=0.2
     # 写灯光命令时，每写write_bunch个，就读一次stroke。避免长时间阻塞。
     write_bunch=10
     # 写命令
@@ -127,24 +128,14 @@ class Test72(BaseConfig):
     module_amount = 1
     color_map=color4
     light_range = range(4)
-    all_loaded_required = False
+    all_loaded_required = True
     lazy_recover=False
+    u_count=52
     temp_amount=3
-    write_interval=1
+    write_interval=1.2
     write_repeat=1
-    # 每个模块温湿度模块个数
-
-class Test71(BaseConfig):
-    for_tencent=0
-    upload = 1
-    heart_beat = 1
-    module_amount = 1
-    color_map=color4
-    light_range = range(4)
-    all_loaded_required = False
-    lazy_recover=False
-    temp_amount=3
     write_enquiry_fast=1
+    write_fast_delay=0.2
     # 每个模块温湿度模块个数
 
 class Test77(BaseConfig):
@@ -160,7 +151,25 @@ class Test77(BaseConfig):
     write_enquiry_fast=1
     # 每个模块温湿度模块个数
 
-class setting(Test77):
+
+class Test71(BaseConfig):
+    for_tencent=0
+    upload = 1
+    heart_beat = 1
+    module_amount = 4
+    color_map=color4
+    light_range = range(4)
+    all_loaded_required = True
+    lazy_recover=False
+    u_count=52
+    temp_amount=3
+    write_interval=1.2
+    write_repeat=1
+    write_enquiry_fast=1
+    write_fast_delay=0.2
+    # 每个模块温湿度模块个数
+
+class setting(Test71):
     pass
 
 

@@ -90,7 +90,7 @@ class DataCenter(dict):
         if len(self.vanila_status)==0:
             return False
         for content in self.vanila_status.values():
-            if not content.get("u_count") >= 42:
+            if not content.get("u_count") >= setting.u_count:
                 return False
         return True
 
@@ -99,7 +99,7 @@ class DataCenter(dict):
 
     @property
     def temp_hum(self):
-        return temp_hum(self.vanila_status)
+        return temp_hum(self.vanila_temp)
 
     @property
     def online_modules(self):

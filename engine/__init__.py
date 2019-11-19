@@ -36,9 +36,9 @@ class DataFeeder(object):
 
     @gen.coroutine
     def to_start_up(self):
-        self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=1)
+        self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=2)
         print("init temp modules.")
-        self.run_command(init_temp(setting.module_amount,setting.temp_amount))
+        # self.run_command(init_temp(setting.module_amount,setting.temp_amount))
 
         dataCenter.vanila_status, dataCenter.vanila_temp,_, _ = yield self.stroke()
 
@@ -50,20 +50,21 @@ class DataFeeder(object):
     def run_command(self, codes):
         self.commandList.extend(codes)
 
+    def insert_command(self,code):
+        self.commandList.insert(0,code)
+
     @gen.coroutine
     def upload_status(self):
         if not setting.upload:
             print("not allowed to upload")
             return
-
-        yield upload(dataCenter.host,setting.url_status,dataCenter.to_upload)
+        yield upload(dataCenter.host,setting.url_status,dataCenter.status_to_upload)
 
     @gen.coroutine
     def upload_temp(self):
         if not setting.upload:
             print("not allowed to upload")
             return
-        rlog("upload temp!!")
         yield upload(dataCenter.host,setting.url_temp,dataCenter.temp_to_upload)
 
     @gen.coroutine
@@ -75,13 +76,11 @@ class DataFeeder(object):
             yield gen.sleep(setting.heartbeat_interval)
             beat = {"heartBeat": dataCenter.network.get("address")}
             results = yield upload(dataCenter.host,setting.url_heartbeat,beat)
-            print("heart beat done==>")
 
 
     def on_re_onshelf(self):
         # 目前只有下发命令的功能 。
         # 这个是把灯光重新加载一遍。
-
         self.run_command(dataCenter.commands)
 
     def _runGivenCommand(self, all_loaded_required=True):
@@ -100,22 +99,25 @@ class DataFeeder(object):
                 break
             i = self.commandList.pop()
             for time in range(setting.write_repeat):
-                try:
-                    print('enquiring:', i)
-                    if setting.write_enqury_fast:
-                        feedback = write_enquiry_fast(self._ser, i.code, setting.write_interval)
-                    else:
-                        feedback = write_enquiry(self._ser, i.code, setting.write_interval)
+                # try:
+                print('enquiring:', i)
+                if setting.write_enquiry_fast:
+                    feedback = write_enquiry_fast(self._ser, i.code,setting.write_fast_delay)
+                else:
+                    feedback = write_enquiry(self._ser, i.code, setting.write_interval)
 
-                    print("feedback||code||same", map_long(feedback),"||",map_long(i.code),feedback==i.code)
-                except Exception as e:
-                    feedback = e.__repr__()
-                    print(feedback)
-                    continue
+                print("feedback||code||same", map_long(feedback),"||",map_long(i.code),feedback==i.code)
+                if feedback!=i.code:
+                    print("added <%s> to list.will do it again."%i)
+                    self.run_command([i])
+
+                # except Exception as e:
+                #     feedback = e.__repr__()
+                #     print(feedback)
+                #     continue
 
     def after_stroke(self):
         pass
-
 
     @gen.coroutine
     def stroke(self,online_only=0):
@@ -140,11 +142,8 @@ class DataFeeder(object):
         else:
             codes_to_check=[code.codes for code in codes]
 
-
-
         for code in codes_to_check:
             # 检查每一个module
-
             try:
                 result = check_module(self._ser, code)
             except Exception as e:
@@ -160,7 +159,7 @@ class DataFeeder(object):
             temp = result.get("temp_hum")[:setting.temp_amount]
 #  如果没有缓存，建立新的。
             if not dataCenter.vanila_temp.get(module_id):
-                dataCenter.vanila_temp[module_id]=[None]*setting.temp_amount
+                dataCenter.vanila_temp[module_id]=[(-0.00,-0.00,0)]*setting.temp_amount
             if not dataCenter.temp_failure_count.get(module_id):
                 dataCenter.temp_failure_count[module_id]=[0]*setting.temp_amount
 
@@ -178,9 +177,8 @@ class DataFeeder(object):
                         updated=1
                 else:
                     updated = 1
-
-
                 dataCenter.vanila_status[module_id] = result
+                dataCenter.vanila_status[module_id].pop("temp_hum")
             except Exception as e:
                 elogger.exception(e)
         raise gen.Return((status_modules,temp_modules, updated, temp_updated))
