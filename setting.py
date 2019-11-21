@@ -142,13 +142,17 @@ class Test77(BaseConfig):
     for_tencent=0
     upload = 1
     heart_beat = 1
-    module_amount = 4
-    color_map=color4
-    light_range = range(4)
-    all_loaded_required = True
+    module_amount =2
+    color_map=color16
+    light_range = range(16)
+    all_loaded_required = False
     lazy_recover=False
+    u_count=52
     temp_amount=3
+    write_interval=1.2
+    write_repeat=1
     write_enquiry_fast=1
+    write_fast_delay=0.2
     # 每个模块温湿度模块个数
 
 
@@ -169,7 +173,7 @@ class Test71(BaseConfig):
     write_fast_delay=0.2
     # 每个模块温湿度模块个数
 
-class setting(Test71):
+class setting(Test77):
     pass
 
 

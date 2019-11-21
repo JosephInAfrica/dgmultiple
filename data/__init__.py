@@ -80,7 +80,7 @@ class DataCenter(dict):
         return {self.network.get("address"):self.vanila_temp}
 
     @property
-    def commands(self):
+    def online_light_commands(self):
         "这是用来恢复灯光的。不在线的就不管了。"
         return from_light_to_executables(self.online_light, self.vanila_status)
 

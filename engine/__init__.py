@@ -49,10 +49,6 @@ class DataFeeder(object):
 
     def run_command(self, codes):
         self.commandList.extend(codes)
-
-    def insert_command(self,code):
-        self.commandList.insert(0,code)
-
     @gen.coroutine
     def upload_status(self):
         if not setting.upload:
@@ -81,7 +77,7 @@ class DataFeeder(object):
     def on_re_onshelf(self):
         # 目前只有下发命令的功能 。
         # 这个是把灯光重新加载一遍。
-        self.run_command(dataCenter.commands)
+        self.run_command(dataCenter.online_light_commands)
 
     def _runGivenCommand(self, all_loaded_required=True):
         "never call it directly. Call it by modifying feeders's command List.传入一个codeList,会按顺序执行。然后清空command_list."
