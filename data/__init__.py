@@ -64,8 +64,13 @@ class DataCenter(dict):
         return from_light_to_codes(self.vanila_light)
 
     @property
-    def to_upload(self):
+    def status(self):
+        
         return {self.network.get("address"): {"status":self.vanila_status, "light": self.vanila_light}}
+
+    # @property
+    # def to_upload(self):
+    #     return {self.network.get("address"): {"status":self.vanila_status, "light": self.vanila_light}}
 
     @property
     def status_to_upload(self):
@@ -78,6 +83,18 @@ class DataCenter(dict):
     @property
     def temp_to_upload(self):
         return {self.network.get("address"):self.vanila_temp}
+
+    @property
+    def rpc_status(self):
+        pass
+
+    @property
+    def rpc_temp(self):
+        pass
+
+    @property
+    def rpc_light(self):
+        pass
 
     @property
     def online_light_commands(self):

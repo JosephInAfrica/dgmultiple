@@ -1,7 +1,7 @@
-languages = ['Python', 'Java', 'C++', 'Ruby', 'C']
+import json
+def get_user_config():
+    with open("config.json",'r') as file:
+        d=json.loads(file.read())
+    return d
 
-print(languages.pop())
-print(languages)
-languages.extend(["C"])
-print(languages)
-print(languages.pop())
+print(get_user_config())

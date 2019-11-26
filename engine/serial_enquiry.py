@@ -40,6 +40,7 @@ class Codes(object):
 
 def enquiry(ser, code, count):
     ser.write(code)
+    # print("enquirying...",map_long(code))
     recv = ser.read(count)
     if not verify(recv):
         raise Exception('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))

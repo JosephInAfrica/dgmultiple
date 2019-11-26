@@ -1,6 +1,6 @@
 #!encoding=utf-8
 from .tencent_api import ApiTencent
-from .broadcaster import StatusHandler, TempHumHandler,RawHandler
+from .broadcaster import StatusHandler, TempHandler,LightHandler,TencentStatusHandler
 from .blink_handler import BlinkHandler
 from .login_handler import LoginHandler, LogoutHandler
 from .config_handler import ConfigHandler, NetworkHandler
@@ -11,16 +11,15 @@ from .alert_off import AlertOffHandler
 urlmap = [
     (r"/", ConfigHandler),
     (r"/u", ApiTencent),
-    (r"/rawt", StatusHandler),
-    (r"/raw", RawHandler),
-    (r"/temp", TempHumHandler),
+    (r"/statust", TencentStatusHandler),
+    (r"/temp", TempHandler),
+    (r"/status", StatusHandler),
+    (r"/light", LightHandler),
     (r"/login", LoginHandler),
     (r"/logout", LogoutHandler),
     (r"/network", NetworkHandler),
     (r"/blink", BlinkHandler),
-    (r"/light", LightHandler),
     (r"/register", RegisterHost),
     (r"/cancel", CancelRegister),
-    (r"/push", Push),
     (r"/alertoff", AlertOffHandler),
 ]

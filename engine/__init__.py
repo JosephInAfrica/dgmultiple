@@ -49,6 +49,8 @@ class DataFeeder(object):
 
     def run_command(self, codes):
         self.commandList.extend(codes)
+
+
     @gen.coroutine
     def upload_status(self):
         if not setting.upload:
@@ -75,8 +77,6 @@ class DataFeeder(object):
 
 
     def on_re_onshelf(self):
-        # 目前只有下发命令的功能 。
-        # 这个是把灯光重新加载一遍。
         self.run_command(dataCenter.online_light_commands)
 
     def _runGivenCommand(self, all_loaded_required=True):
@@ -163,7 +163,6 @@ class DataFeeder(object):
             try:
 
                 result["temp_hum"]=dataCenter.vanila_temp[module_id]
-
                 status_modules[module_id] = result
                 temp_modules[module_id]=dataCenter.vanila_temp[module_id]
 
@@ -189,15 +188,19 @@ class DataFeeder(object):
             old_modules = dataCenter.vanila_status.keys()
             dataCenter.vanila_status, dataCenter.vanila_temp,updated, temp_updated = yield self.stroke(online_only=online_only)
 
-            if updated:
-                print("updated:",updated)
-                yield self.upload_status()
-            if temp_updated:
-                print("temp_updated:",temp_updated)
-                yield self.upload_temp()
-
             new_modules = dataCenter.vanila_status.keys()
             re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
+
+            going_off=watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("going_off")
+
+
+            if updated or going_off:
+                # print("updated:",updated)
+                yield self.upload_status()
+
+            if temp_updated:
+                # print("temp_updated:",temp_updated)
+                yield self.upload_temp()
 
 
             # 这里触发重新上架
