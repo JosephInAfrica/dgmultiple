@@ -44,7 +44,7 @@ class DataFeeder(object):
 
         self.upload_status()
         self.upload_temp()
-        self.on_re_onshelf()
+        self.run_command(dataCenter.online_light_commands)
         print("feed initiliazed")
 
     def run_command(self, codes):
@@ -75,9 +75,6 @@ class DataFeeder(object):
             beat = {"heartBeat": dataCenter.network.get("address")}
             results = yield upload(dataCenter.host,setting.url_heartbeat,beat)
 
-
-    def on_re_onshelf(self):
-        self.run_command(dataCenter.online_light_commands)
 
     def _runGivenCommand(self, all_loaded_required=True):
         "never call it directly. Call it by modifying feeders's command List.传入一个codeList,会按顺序执行。然后清空command_list."
@@ -187,15 +184,21 @@ class DataFeeder(object):
 
             old_modules = dataCenter.vanila_status.keys()
             dataCenter.vanila_status, dataCenter.vanila_temp,updated, temp_updated = yield self.stroke(online_only=online_only)
-
+            print("updated",updated)
+            print("temp_upadated",updated)
             new_modules = dataCenter.vanila_status.keys()
             re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
+            print("re_onshelf",re_onshelf)
 
             going_off=watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("going_off")
+            print("going_off",going_off)
 
-
-            if updated or going_off:
+            if updated:
                 # print("updated:",updated)
+                yield self.upload_status()
+
+            if going_off:
+                # print("going off:",going_off)
                 yield self.upload_status()
 
             if temp_updated:
@@ -205,7 +208,7 @@ class DataFeeder(object):
 
             # 这里触发重新上架
             if re_onshelf:
-                self.on_re_onshelf()
+                self.run_command(dataCenter.reonline_light_commands(re_onshelf))
 
             self._runGivenCommand(all_loaded_required=setting.all_loaded_required)
         except Exception as e:

@@ -11,38 +11,39 @@ from data import dataCenter
 from engine import dataFeeder
 
 
+# class LightHandler(RequestHandler):
+
+
 class LightHandler(RequestHandler):
     @gen.coroutine
     def get(self):
-        self.write(json.dumps(dataCenter.vanila_light))
+        self.write(json.dumps(dataCenter.online_light))
         self.finish()
 
 
+    @gen.coroutine
+    def post(self):
+        self.set_header("Content-Type","application/json")
+        try:
+            data = tornado.escape.json_decode(self.request.body)
+            print(data)
+        except Exception as e:
+            elog(e)
+            print(e)
+            self.write(json.dumps({"err_code": -3}))
+            self.finish()
 
-# class LightHandler(RequestHandler):
-#     @gen.coroutine
-#     def post(self):
-#         self.set_header("Content-Type","application/json")
-#         try:
-#             data = tornado.escape.json_decode(self.request.body)
-#             print(data)
-#         except Exception as e:
-#             elog(e)
-#             print(e)
-#             self.write(json.dumps({"err_code": -3}))
-#             self.finish()
+        results = dataCenter.parse_setting(data)
+        print("parsing result", results)
 
-#         results = dataCenter.parse_setting(data)
-#         print("parsing result", results)
+        error_data, codes_to_execute = results
+        print("error_data", error_data)
+        print("codes_to_execute", codes_to_execute)
 
-#         error_data, codes_to_execute = results
-#         print("error_data", error_data)
-#         print("codes_to_execute", codes_to_execute)
+        self.write(json.dumps(error_data))
 
-#         self.write(json.dumps(error_data))
+        dataFeeder.run_command(codes_to_execute)
 
-#         dataFeeder.run_command(codes_to_execute)
+        dataCenter.save()
 
-#         dataCenter.save()
-
-#         self.finish()
+        self.finish()

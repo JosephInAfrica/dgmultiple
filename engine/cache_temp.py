@@ -12,9 +12,6 @@ def update_temp(temp,temp_cache,failure_cache,allow_failure):
 		result=0
 		if t[2]>0:
 			result=1
-		# 	print(t,"is valid")
-		# else:
-		# 	print(t,"not valid")
 		return result
 		# return 1 if t[2]>0 else 0
 	updated=0

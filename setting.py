@@ -71,7 +71,7 @@ class BaseConfig:
     # ip_config = join(basedir, "ip.sh")
 
     # 允许温湿度读取失败多少次.
-    allow_temp_failure = 5
+    allow_temp_failure = 100
 
     # 是否心跳。
     # 与数据平台对接：数据平台接收update和heartbeat相应uri.
@@ -184,7 +184,7 @@ class Test71(BaseConfig):
     write_fast_delay=0.2
     # 每个模块温湿度模块个数
 
-class setting(Test72):
+class setting(Test71):
     pass
 
 

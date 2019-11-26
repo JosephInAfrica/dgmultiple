@@ -59,9 +59,33 @@ class DataCenter(dict):
                 light[key] = self.vanila_light[key]
         return light
 
+    def reonline_light_commands(self,reon_modules):
+        "这是用来恢复灯光的。不在线的就不管了。"
+        light={}
+        for key in self.vanila_light.keys():
+            if key not in reon_modules:
+                continue
+            if key in self.vanila_status.keys():
+                light[key] = self.vanila_light[key]
+
+        return from_light_to_executables(light, self.vanila_status)
+
     @property
     def light_codes(self):
         return from_light_to_codes(self.vanila_light)
+
+    @property
+    def new_status(self):
+        pass
+
+    @property
+    def new_temp(self):
+        pass
+
+    @property
+    def new_light(self):
+        pass
+
 
     @property
     def status(self):
