@@ -10,9 +10,6 @@ def watch_modules(old, new, registered):
     old = set(old)
     new = set(new)
     comming_on = new - old
-
     going_off = old - new
-
-    re_onshelf = comming_on & registered
-
+    re_onshelf = comming_on & set(registered.keys())
     return {"re_onshelf": re_onshelf, "comming_on": comming_on, "going_off": going_off}

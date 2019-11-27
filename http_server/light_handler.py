@@ -11,12 +11,19 @@ from data import dataCenter
 from engine import dataFeeder
 
 
+# class LightHandler(RequestHandler):
+
+
 class LightHandler(RequestHandler):
+    @gen.coroutine
+    def get(self):
+        self.write(json.dumps(dataCenter.online_light))
+        self.finish()
+
+
     @gen.coroutine
     def post(self):
         self.set_header("Content-Type","application/json")
-
-
         try:
             data = tornado.escape.json_decode(self.request.body)
             print(data)

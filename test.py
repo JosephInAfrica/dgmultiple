@@ -1,11 +1,18 @@
+# import json
+# def get_user_config():
+#     with open("config.json",'r') as file:
+#         d=json.loads(file.read())
+#     return d
 
+# print(get_user_config())
 
-class A(object):
-	b=1
-	a=lambda :__cls__.b
+a={"a":[1,2,3]}
+b=[1,2,3]
+def mod(x):
+	x[1]=4
+	return x
 
-
-a=A.a
-
-print(a())
-
+a=[1,2,3]
+c=[2,3,4]
+print(a==b)
+print(a==c)

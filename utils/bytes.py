@@ -10,6 +10,8 @@ def map_hex(x):
     y = b"00%s" % y
     return y[-2:]
 
+
+
 def map_output(x):
     "用来格式化大量输出。"
     return " ".join([map_hex(i) for i in x])
@@ -23,10 +25,13 @@ def map_output_hex(x):
     return ("00%s" % x[2:])[-2:]
 
 
-def map_long(x):
+# def map_long(x):
 
-    def map_single_hex(x):
-        return ("00%s" % hex(ord(x))[2:])[-2:]
-    return ''.join(map(map_single_hex, x))
+#     def map_single_hex(x):
+#         return ("00%s" % hex(ord(x))[2:])[-2:]
+#     return ''.join(map(map_single_hex, x))
 
 
+
+def map_long(recv):
+    return ' '.join([map_output_hex(hex(ord(i))) for i in recv])

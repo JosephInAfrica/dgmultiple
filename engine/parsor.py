@@ -48,8 +48,6 @@ def treat_device_id(id):
     return id + hash.hexdigest().upper()
 
 
-
-
 def _froma(raw_a):
     "接收一个list还是16进制字符？结果一样吗？是的。"
     "return data_a,是一个3个元素的tuple,模块短id(4位),u数，模块数量。"
@@ -87,9 +85,6 @@ def _fromc(raw_c):
 
 
 def _fromd(raw_d):
-    # if not raw_d:
-    #     raise Exception("got abnormal raw_d input.Processing failed.")
-    # print("raw_d:",[ord(i) for i in raw_d])
     raw_d=raw_d[3:-2]
     raw_d=raw_d[1::2]
     # print("wanted",[ord(i) for i in raw_d])
@@ -131,6 +126,7 @@ def temp_hum(raw_snippet):
     hum = round(hum_positive * (hum_int + 1.00 * hum_float / 100), 2)
     hum = "%.2f" % hum
     return(temp, hum, addr1)
+    # return(temp, hum)
 
 
 def generate(raw_a, raw_b, raw_c,raw_d):

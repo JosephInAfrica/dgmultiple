@@ -27,21 +27,17 @@ class DataCenter(dict):
     _instance = None
     vanila_status = {}
     vanila_light = {}
+    vanila_temp={}
     blink_freq = {}
     temp = {}
     temp_failure_count = {}
     codes_for_recovery = []
-    registered_modules = set()
+    # 目前设定为map,key是module_id,value是u_amount
+    registered_modules = {}
     host = ""
     last_enquiry = {}
     network = {}
 
-    @property
-    def vanila_temp(self):
-        result={}
-        for key,module in self.vanila_status.items():
-            result[key]=module.get("temp_hum")
-        return result
 
     def __init__(self):
         print("尝试初始化数据中心")
@@ -63,13 +59,43 @@ class DataCenter(dict):
                 light[key] = self.vanila_light[key]
         return light
 
+    def reonline_light_commands(self,reon_modules):
+        "这是用来恢复灯光的。不在线的就不管了。"
+        light={}
+        for key in self.vanila_light.keys():
+            if key not in reon_modules:
+                continue
+            if key in self.vanila_status.keys():
+                light[key] = self.vanila_light[key]
+
+        return from_light_to_executables(light, self.vanila_status)
+
     @property
     def light_codes(self):
         return from_light_to_codes(self.vanila_light)
 
     @property
-    def to_upload(self):
+    def new_status(self):
+        pass
+
+
+    @property
+    def new_temp(self):
+        pass
+
+    @property
+    def new_light(self):
+        pass
+
+
+    @property
+    def status(self):
+        
         return {self.network.get("address"): {"status":self.vanila_status, "light": self.vanila_light}}
+
+    # @property
+    # def to_upload(self):
+    #     return {self.network.get("address"): {"status":self.vanila_status, "light": self.vanila_light}}
 
     @property
     def status_to_upload(self):
@@ -84,7 +110,19 @@ class DataCenter(dict):
         return {self.network.get("address"):self.vanila_temp}
 
     @property
-    def commands(self):
+    def rpc_status(self):
+        pass
+
+    @property
+    def rpc_temp(self):
+        pass
+
+    @property
+    def rpc_light(self):
+        pass
+
+    @property
+    def online_light_commands(self):
         "这是用来恢复灯光的。不在线的就不管了。"
         return from_light_to_executables(self.online_light, self.vanila_status)
 
@@ -94,7 +132,7 @@ class DataCenter(dict):
         if len(self.vanila_status)==0:
             return False
         for content in self.vanila_status.values():
-            if not content.get("u_count") >= 42:
+            if not content.get("u_count") >= setting.u_count:
                 return False
         return True
 
@@ -103,7 +141,7 @@ class DataCenter(dict):
 
     @property
     def temp_hum(self):
-        return temp_hum(self.vanila_status)
+        return temp_hum(self.vanila_temp)
 
     @property
     def online_modules(self):
