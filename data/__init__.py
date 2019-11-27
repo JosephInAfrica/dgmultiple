@@ -78,6 +78,7 @@ class DataCenter(dict):
     def new_status(self):
         pass
 
+
     @property
     def new_temp(self):
         pass

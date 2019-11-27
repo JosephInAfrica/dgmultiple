@@ -38,14 +38,20 @@ class DataFeeder(object):
     def to_start_up(self):
         self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=2)
         print("init temp modules.")
+        
         # self.run_command(init_temp(setting.module_amount,setting.temp_amount))
 
-        dataCenter.vanila_status, dataCenter.vanila_temp,_, _ = yield self.stroke()
+        try:
 
-        self.upload_status()
-        self.upload_temp()
-        self.run_command(dataCenter.online_light_commands)
-        print("feed initiliazed")
+
+            dataCenter.vanila_status, dataCenter.vanila_temp,_, _ = yield self.stroke()
+
+            yield self.upload_status()
+            yield self.upload_temp()
+            self.run_command(dataCenter.online_light_commands)
+            print("feed initiliazed")
+        except Exception as e:
+            elogger.exception(e)
 
     def run_command(self, codes):
         self.commandList.extend(codes)
@@ -130,12 +136,7 @@ class DataFeeder(object):
         temp_updated = 0
         invalid_addr = []
 
-        if online_only:
-            codes_to_check=codes_online()
-        else:
-            codes_to_check=[code.codes for code in codes]
-
-        for code in codes_to_check:
+        for code in [code.codes for code in codes]:
             # 检查每一个module
             try:
                 result = check_module(self._ser, code)
@@ -146,33 +147,40 @@ class DataFeeder(object):
 
             module_id = result.get('module_id')
 
-            dataCenter.registered_modules[module_id]=result.get("u_count")
-
-#  更新一下temp.tempt
-            temp = result.get("temp_hum")[:setting.temp_amount]
-#  如果没有缓存，建立新的。
-            if not dataCenter.vanila_temp.get(module_id):
-                dataCenter.vanila_temp[module_id]=[(-0.00,-0.00,0)]*setting.temp_amount
-            if not dataCenter.temp_failure_count.get(module_id):
-                dataCenter.temp_failure_count[module_id]=[0]*setting.temp_amount
-
-            temp_updated=update_temp(temp,dataCenter.vanila_temp[module_id],dataCenter.temp_failure_count[module_id],setting.allow_temp_failure)
             try:
 
-                result["temp_hum"]=dataCenter.vanila_temp[module_id]
+                dataCenter.registered_modules[module_id]=result.get("u_count")
+
+                #  更新一下temp.tempt
+
+                #  如果没有缓存，建立新的。
+                temp = result.get("temp_hum")[:setting.temp_amount]
+                if not dataCenter.vanila_temp.get(module_id):
+                    dataCenter.vanila_temp[module_id]=[(-0.00,-0.00,0)]*setting.temp_amount
+                if not dataCenter.temp_failure_count.get(module_id):
+                    dataCenter.temp_failure_count[module_id]=[0]*setting.temp_amount
+
+                # print("temp cache before",dataCenter.vanila_temp[module_id])
+                if update_temp(temp,dataCenter.vanila_temp[module_id],dataCenter.temp_failure_count[module_id],setting.allow_temp_failure):
+                    temp_updated=1
+
+                # print("temp cache after",dataCenter.vanila_temp[module_id])
+
+                result["temp_hum"]=temp
                 status_modules[module_id] = result
                 temp_modules[module_id]=dataCenter.vanila_temp[module_id]
 
                 if dataCenter.vanila_status.get(module_id):
-
                     if dataCenter.vanila_status[module_id]['status']!=result.get("status") or dataCenter.vanila_status[module_id]['alert']!=result.get("alert"):
                         updated=1
                 else:
                     updated = 1
+
                 dataCenter.vanila_status[module_id] = result
                 dataCenter.vanila_status[module_id].pop("temp_hum")
             except Exception as e:
                 elogger.exception(e)
+        print("temp updated",temp_updated)
         raise gen.Return((status_modules,temp_modules, updated, temp_updated))
 
 
@@ -184,20 +192,26 @@ class DataFeeder(object):
 
             old_modules = dataCenter.vanila_status.keys()
             dataCenter.vanila_status, dataCenter.vanila_temp,updated, temp_updated = yield self.stroke(online_only=online_only)
-            print("updated",updated)
-            print("temp_upadated",updated)
+
+
+            if updated:
+                print("updated",updated)
+                print("temp_upadated",updated)
             new_modules = dataCenter.vanila_status.keys()
             re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
-            print("re_onshelf",re_onshelf)
+            if re_onshelf:
+                print("re_onshelf",re_onshelf)
 
             going_off=watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("going_off")
-            print("going_off",going_off)
+            if going_off:
+                print("going_off",going_off)
 
             if updated:
                 # print("updated:",updated)
                 yield self.upload_status()
 
             if going_off:
+            # 这个是必要的。因为updated不能体现掉线。
                 # print("going off:",going_off)
                 yield self.upload_status()
 

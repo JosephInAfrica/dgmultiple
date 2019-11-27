@@ -3,6 +3,7 @@
 import time
 import random
 from setting import setting
+from loggers import elog
 from utils.bytes import map_output_hex,map_long,map_hex
 from utils.crc16 import crc16,modify_str,verify
 
@@ -43,7 +44,19 @@ def enquiry(ser, code, count):
     # print("enquirying...",map_long(code))
     recv = ser.read(count)
     if not verify(recv):
-        raise Exception('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
+        elog('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
+        return enquiry_again(ser,code,count,allow=1)
+    return recv
+
+def enquiry_again(ser,code,count,allow):
+    if allow>setting.allow_enquiry_fault:
+        raise Exception('Enquiry failed after %s times'%(allow-1))
+    elog("trying x%s times"%allow)
+    ser.write(code)
+    # print("enquirying...",map_long(code))
+    recv = ser.read(count)
+    if not verify(recv):
+        return enquiry_again(ser,code,count,allow+1)
     return recv
 
 

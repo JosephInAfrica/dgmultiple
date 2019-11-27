@@ -72,6 +72,7 @@ class BaseConfig:
 
     # 允许温湿度读取失败多少次.
     allow_temp_failure = 100
+    allow_enquiry_fault=2
 
     # 是否心跳。
     # 与数据平台对接：数据平台接收update和heartbeat相应uri.
@@ -153,7 +154,7 @@ class Test77(BaseConfig):
     for_tencent=0
     upload = 1
     heart_beat = 1
-    module_amount =2
+    module_amount =1
     color_map=color16
     light_range = range(16)
     all_loaded_required = False
@@ -184,7 +185,7 @@ class Test71(BaseConfig):
     write_fast_delay=0.2
     # 每个模块温湿度模块个数
 
-class setting(Test71):
+class setting(Test72):
     pass
 
 
