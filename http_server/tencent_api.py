@@ -99,9 +99,6 @@ class ApiTencent(RequestHandler):
             self.write(json.dumps(error_data))
 
             dataFeeder.run_command(codes_to_execute)
-
-            dataCenter.save()
-
             self.finish()
 
         elif action == "set_blinkfreq":

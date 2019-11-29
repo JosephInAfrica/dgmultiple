@@ -51,11 +51,13 @@ def enquiry(ser, code, count):
 def enquiry_again(ser,code,count,allow):
     if allow>=setting.allow_enquiry_fail:
         elog('Enquiry failed after %s times'%(allow-1))
+        raise Exception('Enquiry failed after %s times'%(allow-1))
     rlog("trying x%s times"%(allow+1))
     ser.write(code)
     # print("enquirying...",map_long(code))
     recv = ser.read(count)
     if not verify(recv):
+        rlog('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
         return enquiry_again(ser,code,count,allow+1)
     return recv
 

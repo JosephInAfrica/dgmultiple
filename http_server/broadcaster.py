@@ -33,10 +33,8 @@ class StatusHandler (RequestHandler):
     @gen.coroutine
     def get(self):
         self.set_header("Content-Type","application/json")
-        "这个try将来可能会去掉，因为好像没啥用。"
-        
+        "这个try将来可能会去掉，因为好像没啥用。"    
         self.write(json.dumps(dataCenter.vanila_status))
-
         self.finish()
 
 class NewStatusHandler (RequestHandler):
@@ -55,7 +53,6 @@ class NewTempHandler(RequestHandler):
     @gen.coroutine
     def get(self):
         self.set_header("Content-Type","application/json")
-        # print(json.dumps(dataCenter.temp_hum))
         self.write(json.dumps(dataCenter.new_temp))
         self.finish()
 

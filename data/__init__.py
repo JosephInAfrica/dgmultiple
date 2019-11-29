@@ -59,12 +59,6 @@ class DataCenter(dict):
                 light[key] = self.vanila_light[key]
         return light
 
-
-    # @property
-    # def new_online_light(self):
-    #     light={}
-    #     for key in self.new_vanila_light.keys():
-
     def reonline_light_commands(self,reon_modules):
         "这是用来恢复灯光的。不在线的就不管了。"
         light={}
@@ -73,7 +67,6 @@ class DataCenter(dict):
                 continue
             if key in self.vanila_status.keys():
                 light[key] = self.vanila_light[key]
-
         return from_light_to_executables(light, self.vanila_status)
 
     @property
@@ -140,6 +133,8 @@ class DataCenter(dict):
         for content in self.vanila_status.values():
             if not content.get("u_count") >= setting.u_count:
                 return False
+        if len(self.vanila_status)<setting.module_amount:
+            return False
         return True
 
     def parse_blink(self):
@@ -198,7 +193,12 @@ class DataCenter(dict):
     def update_light(self,code):
         "code=(module_id,index,light)"
         mid,index,status=code.module_id,code.index,code.status
-        self.vanila_light[mid][index]=status
+        if self.vanila_light.get(mid):
+            self.vanila_light[mid][index]=status
+        else:
+            self.vanila_light[mid]={}
+            self.vanila_light[mid][index]=status
+
 
     @property
     def json_tencent_status(self):

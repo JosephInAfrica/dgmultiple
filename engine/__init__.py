@@ -38,9 +38,9 @@ class DataFeeder(object):
     def to_start_up(self):
         self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=2)
         print("init temp modules.")
+        print(setting.__dict__)
         try:
             dataCenter.vanila_status, dataCenter.vanila_temp,_, _ = yield self.stroke()
-
             yield self.upload_status()
             yield self.upload_temp()
             self.run_command(dataCenter.online_light_commands)
@@ -100,6 +100,7 @@ class DataFeeder(object):
                 self.run_command([i])
             else:
                 dataCenter.update_light(i)
+        dataCenter.save_light()
 
     def after_stroke(self):
         pass
@@ -146,11 +147,8 @@ class DataFeeder(object):
                 if not dataCenter.temp_failure_count.get(module_id):
                     dataCenter.temp_failure_count[module_id]=[0]*setting.temp_amount
 
-                # print("temp cache before",dataCenter.vanila_temp[module_id])
                 if update_temp(temp,dataCenter.vanila_temp[module_id],dataCenter.temp_failure_count[module_id],setting.allow_temp_failure):
                     temp_updated=1
-
-                # print("temp cache after",dataCenter.vanila_temp[module_id])
 
                 result["temp_hum"]=temp
                 status_modules[module_id] = result
@@ -191,23 +189,18 @@ class DataFeeder(object):
                 print("going_off",going_off)
 
             if updated:
-                # print("updated:",updated)
                 yield self.upload_status()
 
             if going_off:
-            # 这个是必要的。因为updated不能体现掉线。
-                # print("going off:",going_off)
                 yield self.upload_status()
 
             if temp_updated:
-                # print("temp_updated:",temp_updated)
                 yield self.upload_temp()
 
 
-            # 这里触发重新上架
             if re_onshelf:
                 print("Module reonshelf:==>",re_onshelf)
-                self.run_command(dataCenter.reonline_light_commands(re_onshelf))
+                self.run_command(dataCenter.online_light_commands)
 
             self._runCommand(all_loaded_required=setting.all_loaded_required)
         except Exception as e:
@@ -220,21 +213,6 @@ class DataFeeder(object):
 
         yield self.to_start_up()
         while 1:
-            # if setting.lazy_recover:
-            #     if not dataCenter.online_modules:
-            #         print("all modules dropped.sleeping....")
-            #         for i in range(setting.resume_delay):
-            #             time.sleep(1)
-
-            #             print("%s seconds left"%(setting.resume_delay-i))
-            #         print("resume work")              
-            #         yield self.strokes(online_only=0)
-            #     if dataCenter.partly_online:
-            #         l=len(dataCenter.online_address)
-            #         for i in range(12//l):
-            #             print("%s modules online.Checking online only.%s of %s times"%(l,i+1,12//l))
-            #             yield self.strokes(online_only=1)
-
             yield self.strokes(online_only=0)
 
 dataFeeder = DataFeeder()

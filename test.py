@@ -16,3 +16,10 @@ except Exception as e:
 	# logging.log(e.__repr__())
 	logging.warning(e)
 	# logging.log(e)
+
+class A:
+	a=1
+	b=2
+
+
+print(A.__dict__)

@@ -102,7 +102,7 @@ def status_light(vanila_status, vanila_light, registered_modules, upsidedown=Tru
         if module_id in vanila_status.keys():
             continue
         data0 = {"u_id": module_id, "u_count": u_count, "u_power": 0, "u_status": None}
-        print('dropped module:', data0)
+        # print('dropped module:', data0)
         data.append(data0)
 
     err_code = -100

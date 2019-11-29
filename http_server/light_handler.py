@@ -11,16 +11,11 @@ from data import dataCenter
 from engine import dataFeeder
 
 
-# class LightHandler(RequestHandler):
-
-
 class LightHandler(RequestHandler):
     @gen.coroutine
     def get(self):
-
         self.write(json.dumps(dataCenter.online_light))
         self.finish()
-
 
     @gen.coroutine
     def post(self):
@@ -35,17 +30,12 @@ class LightHandler(RequestHandler):
             self.finish()
 
         results = dataCenter.parse_setting(data)
-        # print("parsing result", results)
-
         error_data, codes_to_execute = results
         print("error_data", error_data)
         print("codes_to_execute", codes_to_execute)
 
         self.write(json.dumps(error_data))
-
         dataFeeder.run_command(codes_to_execute)
-
-        dataCenter.save()
 
         self.finish()
 
