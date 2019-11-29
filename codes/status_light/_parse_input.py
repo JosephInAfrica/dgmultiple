@@ -18,6 +18,7 @@ def parse(dic, raw_status, light_range):
 
 
 def merge_light(raw_light, light_codes):
+    "light_codes=[(<module_id,index,light_code),...]"
     "接收light_tuples和raw_light，对raw_light进行修改,返回修改后的raw_light."
     "这里light_codes是指翻转过的，可以与raw_light直接对应位置的。"
     if not light_codes:

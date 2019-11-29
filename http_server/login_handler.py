@@ -15,6 +15,7 @@ class LoginHandler(RequestHandler):
 
     @gen.coroutine
     def get(self):
+        self.set_header("Content-Type","text/html; charset=UTF-8")
         if self.get_secure_cookie("current_user"):
             self.redirect('/')
         else:
@@ -22,6 +23,7 @@ class LoginHandler(RequestHandler):
 
     @gen.coroutine
     def post(self):
+        self.set_header("Content-Type","text/html; charset=UTF-8")
         username = self.get_argument("username")
         password = self.get_argument("password")
         if username == u"admin" and password == u"admin":
@@ -35,5 +37,6 @@ class LogoutHandler(RequestHandler):
 
     @gen.coroutine
     def get(self):
+        self.set_header("Content-Type","text/html; charset=UTF-8")
         self.clear_cookie('current_user')
         self.redirect("/login")

@@ -66,6 +66,7 @@ class ConfigHandler(BaseHandler):
 
     @gen.coroutine
     def get(self):
+        self.set_header("Content-Type","text/html; charset=UTF-8")
         if not self.get_secure_cookie("current_user"):
             self.redirect("/login")
         else:

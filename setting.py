@@ -5,6 +5,7 @@ import logging.handlers
 from os.path import abspath, dirname, join
 import re
 import json
+from ConfigParser import ConfigParser
 
 color16 = {0: "00", 1: "00", 2: "06", 3: "01",4:"02",5:"0D",6:"08",7:"09",8:"04",9:"03",10:"05",11:"07",12:"0B",13:"0A",14:"0C",15:"0E"}
 
@@ -19,7 +20,6 @@ def get_user_config():
         d=json.loads(file.read())
     return d
     # d=json.loads(user_conf)
-
 
 def get_network_config():
     "从系统中读取到配置文件"
@@ -37,155 +37,84 @@ def get_network_config():
     print("get_network_config is called!!!!\n\n")
     return parse(ip_config)
 
-
 class BaseConfig:
-
-    # for_tencnet值0,1分别代表模块和标签的id按腾讯的要求加工/采用原始数据。
     network=get_network_config()
-    for_tencent=0
-    # 是否上传数据到数据平台。
-    upload = 1
-    # 是否上传心跳。
-    ip_config=ip_config
-    heart_beat = 1
+
     backup_light = join(basedir, "backup_light.json")
     backup_status = join(basedir, "backup_status.json")
     backup_blink = join(basedir, "backup_blinkfreq.json")
     backup_lightcodes = join(basedir, "backup_lightcodes.json")
     backup_host = join(basedir, "backup_host.json")
-    # 有几节模块。设置多于实际节数也能用。但效率稍有影响。因为会尝试读不存在设备的地址.
-    module_amount = 1
-    # 腾讯要求只允许4种状态码。超出报相应错。状态码限定数量。
-    light_range = range(16)
-    # 是否全部上线才下发灯效。推荐是。
-    all_loaded_required = True
-    color_map=color16
-    # 全部掉线后是否延时加载。
-    lazy_recover=True
-    # 全部掉线后，delay多少秒重读数据。
-    resume_delay=24
-    # 心跳间隔。
-    heartbeat_interval = 20
-
     logsdir = join(basedir, "logs")
-    # ip_config = join(basedir, "ip.sh")
+    # 有几节模块。设置多于实际节数也能用。但效率稍有影响。因为会尝试读不存在设备的地址.
+    # 腾讯要求只允许4种状态码。超出报相应错。状态码限定数量。
+    # 是否全部上线才下发灯效。推荐是。
+    regular_log = join(logsdir, "regular.log")
+    error_log = join(logsdir, "error.log")
+###
 
-    # 允许温湿度读取失败多少次.
-    allow_temp_failure = 100
+    ip_config=ip_config
+
+
+# 调试
+     # for_tencnet值0,1分别代表模块和标签的id按腾讯的要求加工/采用原始数据。
+    for_tencent=0
+    upload = 1
+    heart_beat = 1
+    light_range = range(16)
+    color_map=color16
+
+    allow_temp_failure = 0
     allow_enquiry_fault=2
 
-    # 是否心跳。
-    # 与数据平台对接：数据平台接收update和heartbeat相应uri.
     url_status = "/status"
     url_heartbeat = "/heartbeat"
     url_temp="/temp"
-    regular_log = join(logsdir, "regular.log")
-    uvariation_log = join(logsdir, "uvariation.log")
-    error_log = join(logsdir, "error.log")
+    request_timeout=5
+    all_loaded_required = True
+###
+# 自检参照 按实际情况配置 应该可以导入文件 web api
+    module_amount = 1
     u_count=52
     temp_amount=3
-    temp_hum_nos = [(10, 11, 12), (13, 14, 15)]
-    interval = 0.6
-    write_interval=0.4
-    write_repeat=1
-    write_fast_delay=0.2
-    # 写灯光命令时，每写write_bunch个，就读一次stroke。避免长时间阻塞。
+    heartbeat_interval = 20
     write_bunch=10
-    # 写命令
-    startup_delay=0
-    # 当所有模块都掉线时，多长时间以后重新检测。
-    # 上传超时时间
-    request_timeout=20
-
-    # 每个模块温湿度模块个数
-
-class RegularConfig(BaseConfig):
-    for_tencent=0
-    upload = 1
-    heart_beat = 1
-    module_amount = 4
-    light_range = range(4)
-    color_map=color4
-    all_loaded_required = True
-    lazy_recover=True
-
+    write_delay=0.1
+    # write_interval=0.6
+    # 写灯光命令时，每写write_bunch个，就读一次stroke。避免长时间阻塞。
 
 class TencentConfig(BaseConfig):
-    for_tencent=0
-    upload = 1
-    heart_beat = 1
+    for_tencent=1
+    upload = 0
+    heart_beat = 0
     module_amount = 4
     color_map=color4
     light_range = range(4)
     all_loaded_required = True
-    lazy_recover=True
 
-
-class TestConfig(BaseConfig):
-    for_tencent=0
-    upload = 1
-    heart_beat = 1
-    module_amount = 1
-    color_map=color4
-    light_range = range(4)
-    all_loaded_required = False
-    lazy_recover=False
-    temp_amount=3
-    # 每个模块温湿度模块个数
 
 class Test72(BaseConfig):
-    for_tencent=0
-    upload = 1
-    heart_beat = 1
     module_amount = 1
-    color_map=color4
-    light_range = range(4)
-    all_loaded_required = True
-    lazy_recover=False
     u_count=52
     temp_amount=3
-    write_interval=1.2
-    write_repeat=1
-    write_enquiry_fast=1
-    write_fast_delay=0.2
+
     # 每个模块温湿度模块个数
 
 class Test77(BaseConfig):
-    for_tencent=0
-    upload = 1
-    heart_beat = 1
-    module_amount =1
-    color_map=color16
-    light_range = range(16)
-    all_loaded_required = False
-    lazy_recover=False
+    module_amount = 1
     u_count=52
     temp_amount=3
-    write_interval=1.2
-    write_repeat=1
-    write_enquiry_fast=1
-    write_fast_delay=0.2
-    # 每个模块温湿度模块个数
-
+    all_loaded_required = False
 
 class Test71(BaseConfig):
-    for_tencent=0
-    upload = 1
-    heart_beat = 1
-    module_amount = 4
-    color_map=color4
-    light_range = range(4)
-    all_loaded_required = True
-    lazy_recover=False
+    module_amount = 1
     u_count=52
     temp_amount=3
-    write_interval=1.2
-    write_repeat=1
-    write_enquiry_fast=1
-    write_fast_delay=0.2
+    color_map=color4
+    light_range = range(4)
     # 每个模块温湿度模块个数
 
-class setting(Test72):
+class setting(Test71):
     pass
 
 

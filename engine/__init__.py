@@ -38,12 +38,7 @@ class DataFeeder(object):
     def to_start_up(self):
         self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=2)
         print("init temp modules.")
-        
-        # self.run_command(init_temp(setting.module_amount,setting.temp_amount))
-
         try:
-
-
             dataCenter.vanila_status, dataCenter.vanila_temp,_, _ = yield self.stroke()
 
             yield self.upload_status()
@@ -82,7 +77,7 @@ class DataFeeder(object):
             results = yield upload(dataCenter.host,setting.url_heartbeat,beat)
 
 
-    def _runGivenCommand(self, all_loaded_required=True):
+    def _runCommand(self, all_loaded_required=True):
         "never call it directly. Call it by modifying feeders's command List.传入一个codeList,会按顺序执行。然后清空command_list."
         if not self.commandList:
             return
@@ -94,26 +89,17 @@ class DataFeeder(object):
         n=0
         while self.commandList:
             n+=1
-            if n>setting.write_bunch//setting.write_repeat:
+            if n>setting.write_bunch:
                 break
             i = self.commandList.pop()
-            for time in range(setting.write_repeat):
-                # try:
-                print('enquiring:', i)
-                if setting.write_enquiry_fast:
-                    feedback = write_enquiry_fast(self._ser, i.code,setting.write_fast_delay)
-                else:
-                    feedback = write_enquiry(self._ser, i.code, setting.write_interval)
 
-                print("feedback||code||same", map_long(feedback),"||",map_long(i.code),feedback==i.code)
-                if feedback!=i.code:
-                    print("added <%s> to list.will do it again."%i)
-                    self.run_command([i])
-
-                # except Exception as e:
-                #     feedback = e.__repr__()
-                #     print(feedback)
-                #     continue
+            feedback = write_enquiry_fast(self._ser, i.code,setting.write_delay)
+            rlog("feedback<%s>||code<%s>||same<%s>"%(map_long(feedback),map_long(i.code),feedback==i.code))
+            if feedback!=i.code:
+                rlog("added <%s> to list.will do it again."%i)
+                self.run_command([i])
+            else:
+                dataCenter.update_light(i)
 
     def after_stroke(self):
         pass
@@ -222,9 +208,10 @@ class DataFeeder(object):
 
             # 这里触发重新上架
             if re_onshelf:
+                print("Module reonshelf:==>",re_onshelf)
                 self.run_command(dataCenter.reonline_light_commands(re_onshelf))
 
-            self._runGivenCommand(all_loaded_required=setting.all_loaded_required)
+            self._runCommand(all_loaded_required=setting.all_loaded_required)
         except Exception as e:
             elogger.exception(e)
 

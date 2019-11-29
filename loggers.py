@@ -2,6 +2,8 @@
 from setting import setting
 import logging
 import os
+import ConfigParser
+
 
 vformatter = logging.Formatter(
     '%(message)s')

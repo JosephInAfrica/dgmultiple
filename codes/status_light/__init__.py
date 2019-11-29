@@ -60,9 +60,9 @@ def treat_post(dic, raw_light, raw_status, light_range):
     # 生成错误代码和灯代码。
 
     light_codes = rid_redundant(light_codes, raw_light)
-    print("light_codes after filter dups", light_codes)
-    # 这里会修改全局变量raw_light的值。
-    raw_light = merge_light(raw_light, light_codes)
+    # print("light_codes after filter dups", light_codes)
+    # 这里会修改全局变量raw_light的值。 应该在改完后才修改。
+    # raw_light = merge_light(raw_light, light_codes)
 
     codes = [Code(*i,raw_status=raw_status) for i in light_codes]
     return (error_data, codes)
