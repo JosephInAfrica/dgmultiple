@@ -18,9 +18,9 @@ def update_temp(temp,temp_cache,failure_cache,allow_failure):
 		# return 1 if t[2]>0 else 0
 	updated=0
 	l=len(temp)
-	# try:
-	print("temp",temp)
-	print("temp_cache",temp_cache)
+	# # try:
+	# print("temp",temp)
+	# print("temp_cache",temp_cache)
 	for i in range(l):
 		if valid(temp[i]):
 			# print(temp[i],"is valid")
@@ -41,7 +41,7 @@ def update_temp(temp,temp_cache,failure_cache,allow_failure):
 				updated=1
 	# except Exception as e:
 	# 	elogger.exception(e)
-	print("updated",updated)
+	# print("updated",updated)
 	return updated
 
 

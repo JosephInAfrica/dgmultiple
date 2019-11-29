@@ -90,12 +90,11 @@ class ApiTencent(RequestHandler):
                 self.write(json.dumps({"err_code": -3}))
                 self.finish()
 
-            results = dataCenter.parse_setting(data)
-            print("parsing result", results)
-
-            error_data, codes_to_execute = results
-            print("error_data", error_data)
-            print("codes_to_execute", codes_to_execute)
+            error_data, codes_to_execute = dataCenter.parse_setting(data)
+            # print("parsing result", results)
+             
+            rlog("error_data:%s"%error_data)
+            rlog("codes_to_execute:%s"% codes_to_execute)
 
             self.write(json.dumps(error_data))
 

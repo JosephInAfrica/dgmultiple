@@ -24,7 +24,7 @@ class AlertOffHandler(RequestHandler):
         try:
             data = tornado.escape.json_decode(self.request.body)
         except Exception as e:
-            elog(e)
+            rlog(e)
             # print(e)
             self.set_status(400)
             self.write(json.dumps({"error": "unable to parse"}))

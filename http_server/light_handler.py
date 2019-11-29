@@ -17,6 +17,7 @@ from engine import dataFeeder
 class LightHandler(RequestHandler):
     @gen.coroutine
     def get(self):
+
         self.write(json.dumps(dataCenter.online_light))
         self.finish()
 
@@ -34,7 +35,7 @@ class LightHandler(RequestHandler):
             self.finish()
 
         results = dataCenter.parse_setting(data)
-        print("parsing result", results)
+        # print("parsing result", results)
 
         error_data, codes_to_execute = results
         print("error_data", error_data)
@@ -46,4 +47,11 @@ class LightHandler(RequestHandler):
 
         dataCenter.save()
 
+        self.finish()
+
+
+class NewLightHandler(RequestHandler):
+    @gen.coroutine
+    def get(self):
+        self.write(json.dumps(dataCenter.new_light))
         self.finish()

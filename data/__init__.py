@@ -14,7 +14,7 @@ from codes.blink_freq import parse as parse_blink
 from codes.temp_hum import temp_hum
 from startup import recover_host, recover_light, recover_blink
 from configInterface import get_network_config
-
+from .output import new_status as _new_status,new_temp as _new_temp,new_light as _new_light
 
 class DataCenter(dict):
     #  这是为了单例模式。
@@ -59,6 +59,12 @@ class DataCenter(dict):
                 light[key] = self.vanila_light[key]
         return light
 
+
+    # @property
+    # def new_online_light(self):
+    #     light={}
+    #     for key in self.new_vanila_light.keys():
+
     def reonline_light_commands(self,reon_modules):
         "这是用来恢复灯光的。不在线的就不管了。"
         light={}
@@ -76,16 +82,16 @@ class DataCenter(dict):
 
     @property
     def new_status(self):
-        pass
+        return _new_status(self.vanila_status)
 
 
     @property
     def new_temp(self):
-        pass
+        return _new_temp(self.vanila_temp)
 
     @property
     def new_light(self):
-        pass
+        return _new_light(self.vanila_light)
 
 
     @property
@@ -187,6 +193,12 @@ class DataCenter(dict):
                 print("saved==>", self.vanila_light)
             except:
                 pass
+
+
+    def update_light(self,code):
+        "code=(module_id,index,light)"
+        mid,index,status=code.module_id,code.index,code.status
+        self.vanila_light[mid][index]=status
 
     @property
     def json_tencent_status(self):

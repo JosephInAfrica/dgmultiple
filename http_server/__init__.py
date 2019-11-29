@@ -1,11 +1,11 @@
 #!encoding=utf-8
 from .tencent_api import ApiTencent
-from .broadcaster import StatusHandler, TempHandler,LightHandler,TencentStatusHandler
+from .broadcaster import StatusHandler,NewStatusHandler, TempHandler, NewTempHandler,TencentStatusHandler
 from .blink_handler import BlinkHandler
 from .login_handler import LoginHandler, LogoutHandler
 from .config_handler import ConfigHandler, NetworkHandler
 from .register_host import RegisterHost, CancelRegister
-from .light_handler import LightHandler
+from .light_handler import LightHandler,NewLightHandler
 from .control import Push
 from .alert_off import AlertOffHandler 
 urlmap = [
@@ -13,8 +13,11 @@ urlmap = [
     (r"/u", ApiTencent),
     (r"/statust", TencentStatusHandler),
     (r"/temp", TempHandler),
+    (r"/ntemp", NewTempHandler),
     (r"/status", StatusHandler),
+    (r"/nstatus", NewStatusHandler),
     (r"/light", LightHandler),
+    (r"/nlight", NewLightHandler),
     (r"/login", LoginHandler),
     (r"/logout", LogoutHandler),
     (r"/network", NetworkHandler),

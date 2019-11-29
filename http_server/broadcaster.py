@@ -39,6 +39,26 @@ class StatusHandler (RequestHandler):
 
         self.finish()
 
+class NewStatusHandler (RequestHandler):
+    @gen.coroutine
+    def get(self):
+        self.set_header("Content-Type","application/json")
+        "这个try将来可能会去掉，因为好像没啥用。"
+        
+        self.write(json.dumps(dataCenter.new_status))
+
+        self.finish()
+
+
+class NewTempHandler(RequestHandler):
+
+    @gen.coroutine
+    def get(self):
+        self.set_header("Content-Type","application/json")
+        # print(json.dumps(dataCenter.temp_hum))
+        self.write(json.dumps(dataCenter.new_temp))
+        self.finish()
+
 
 class TempHandler(RequestHandler):
 
@@ -48,12 +68,3 @@ class TempHandler(RequestHandler):
         # print(json.dumps(dataCenter.temp_hum))
         self.write(json.dumps(dataCenter.vanila_temp))
         self.finish()
-
-
-class LightHandler(RequestHandler):
-    @gen.coroutine
-    def get(self):
-        self.set_header("Content-Type","application/json")
-        self.write(json.dumps(dataCenter.vanila_light))
-        self.finish()
-

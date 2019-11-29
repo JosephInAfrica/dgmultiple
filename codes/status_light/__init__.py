@@ -2,7 +2,7 @@
 
 "收到数据后怎么处理？所有的相关函数都已经写好，这里将所有的函数串起来便于engine调用。把所有的所需要参数都参与。"
 "这个包是关于解析用户输入的灯光信息;输出要执行的设置代码和更新全局变量;"
-from _parse_input import parse, merge_light
+from _parse_input import parse
 from _filter import rid_redundant
 from generate_executables import Code
 from pget import get_light, get_tag
@@ -60,9 +60,9 @@ def treat_post(dic, raw_light, raw_status, light_range):
     # 生成错误代码和灯代码。
 
     light_codes = rid_redundant(light_codes, raw_light)
-    print("light_codes after filter dups", light_codes)
-    # 这里会修改全局变量raw_light的值。
-    raw_light = merge_light(raw_light, light_codes)
+    # print("light_codes after filter dups", light_codes)
+    # 这里会修改全局变量raw_light的值。 应该在改完后才修改。
+    # raw_light = merge_light(raw_light, light_codes)
 
     codes = [Code(*i,raw_status=raw_status) for i in light_codes]
     return (error_data, codes)

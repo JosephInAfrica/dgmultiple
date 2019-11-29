@@ -18,13 +18,14 @@ class Code(object):
         self.index=index
         self.status=status
         self.raw_status=raw_status
+        self.address=raw_status.get(module_id).get("address")
         # 感觉写得很烂 
     @property
     def code(self):
         return _code_to_code((self.module_id,self.index,self.status),self.raw_status)
         
     def __repr__(self):
-        return "<LightColor>module:%s index:%s status:%s"%(self.module_id,self.index,self.status)
+        return "<LightColor>module:%s address:%s index:%s status:%s"%(self.module_id,self.address,self.index,self.status)
 
 def _code_to_code(code, raw_status):
     "输入light code (module_id,index,status). 生成执行代码list."
@@ -44,11 +45,5 @@ def _generate_code(address, position, colorCode,colorMap=setting.color_map):
     "position should be 01 to 54 in int."
     "module is address of module  in int"
     position = ord_to_hex(position)
-    # colorCode 目前 1, 6 两个值可选。
-
-    # colorCode = ("0%s" % hex(colorCode)[2:])[-2:]
-
     toStart = '%s060028%s%s' % (ord_to_hex(address), position, colorMap.get(colorCode))
-    # return toStart
-    # return toStart.decode('hex')
     return modify_str(toStart.decode('hex'))

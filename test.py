@@ -1,18 +1,18 @@
-# import json
-# def get_user_config():
-#     with open("config.json",'r') as file:
-#         d=json.loads(file.read())
-#     return d
+from configparser import ConfigParser
+import logging
+config=ConfigParser()
 
-# print(get_user_config())
+config.read("default.conf")
 
-a={"a":[1,2,3]}
-b=[1,2,3]
-def mod(x):
-	x[1]=4
-	return x
+print(config["network"]["ip"])
 
-a=[1,2,3]
-c=[2,3,4]
-print(a==b)
-print(a==c)
+try:
+	a=1/0
+except Exception as e:
+	print(dir(e))
+	# print(e.__dir__())
+	print(e.__cause__)
+	# print(e.__context__())
+	# logging.log(e.__repr__())
+	logging.warning(e)
+	# logging.log(e)
