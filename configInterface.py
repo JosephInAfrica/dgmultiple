@@ -25,7 +25,7 @@ def set_network_config(kwargs):
         old_ip, old_netmask, old_gateway, old_dns = old_config
     except Exception as e:
         old_ip, old_netmask, old_gateway, old_dns = "", "", "", ""
-        elog("failed to get old data")
+        rlog("failed to get old data")
 
     address = kwargs.get('address')
     netmask = kwargs.get('netmask')
@@ -76,6 +76,6 @@ def is_valid(address):
                 return 0
 
     except Exception as e:
-        elogger.exception(e)
+        rlog(e)
         return 0
     return 1

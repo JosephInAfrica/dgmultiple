@@ -49,6 +49,7 @@ class DataFeeder(object):
             elogger.exception(e)
 
     def run_command(self, codes):
+        rlog("new commands included==>%s"%codes)
         self.commandList.extend(codes)
 
 
@@ -83,19 +84,18 @@ class DataFeeder(object):
             return
         if all_loaded_required:
             if not dataCenter.all_loaded:
-                print("not fully loaded.See you next time.")
+                rlog("not fully loaded.See you next time.")
                 return
-        print("trying to execute commands....")
         n=0
         while self.commandList:
             n+=1
             if n>setting.write_bunch:
                 break
             i = self.commandList.pop()
-
+            rlog("enquirying: %s"%i)
             feedback = write_enquiry_fast(self._ser, i.code,setting.write_delay)
-            rlog("feedback<%s>||code<%s>||same<%s>"%(map_long(feedback),map_long(i.code),feedback==i.code))
-            if feedback!=i.code:
+            if not feedback==i.code:
+                rlog("feedback<%s>||code<%s>"%(map_long(feedback),map_long(i.code)))
                 rlog("added <%s> to list.will do it again."%i)
                 self.run_command([i])
             else:
@@ -166,7 +166,7 @@ class DataFeeder(object):
                 dataCenter.vanila_status[module_id].pop("temp_hum")
             except Exception as e:
                 elogger.exception(e)
-        print("temp updated",temp_updated)
+        # print("temp updated",temp_updated)
         raise gen.Return((status_modules,temp_modules, updated, temp_updated))
 
 
@@ -175,14 +175,12 @@ class DataFeeder(object):
         # 所有的冲程。包括取数据，比对，触发各种勾子（重新上线，数据更新）
         # print("strike\n")
         try:
-
             old_modules = dataCenter.vanila_status.keys()
             dataCenter.vanila_status, dataCenter.vanila_temp,updated, temp_updated = yield self.stroke(online_only=online_only)
-
-
             if updated:
                 print("updated",updated)
-                print("temp_upadated",updated)
+            if temp_updated:
+                print("temp_upadated",temp_updated)
             new_modules = dataCenter.vanila_status.keys()
             re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
             if re_onshelf:
@@ -222,20 +220,20 @@ class DataFeeder(object):
 
         yield self.to_start_up()
         while 1:
-            if setting.lazy_recover:
-                if not dataCenter.online_modules:
-                    print("all modules dropped.sleeping....")
-                    for i in range(setting.resume_delay):
-                        time.sleep(1)
+            # if setting.lazy_recover:
+            #     if not dataCenter.online_modules:
+            #         print("all modules dropped.sleeping....")
+            #         for i in range(setting.resume_delay):
+            #             time.sleep(1)
 
-                        print("%s seconds left"%(setting.resume_delay-i))
-                    print("resume work")              
-                    yield self.strokes(online_only=0)
-                if dataCenter.partly_online:
-                    l=len(dataCenter.online_address)
-                    for i in range(12//l):
-                        print("%s modules online.Checking online only.%s of %s times"%(l,i+1,12//l))
-                        yield self.strokes(online_only=1)
+            #             print("%s seconds left"%(setting.resume_delay-i))
+            #         print("resume work")              
+            #         yield self.strokes(online_only=0)
+            #     if dataCenter.partly_online:
+            #         l=len(dataCenter.online_address)
+            #         for i in range(12//l):
+            #             print("%s modules online.Checking online only.%s of %s times"%(l,i+1,12//l))
+            #             yield self.strokes(online_only=1)
 
             yield self.strokes(online_only=0)
 

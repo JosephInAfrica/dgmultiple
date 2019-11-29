@@ -65,7 +65,7 @@ class BaseConfig:
     color_map=color16
 
     allow_temp_failure = 0
-    allow_enquiry_fault=2
+    allow_enquiry_fail=2
 
     url_status = "/status"
     url_heartbeat = "/heartbeat"
@@ -79,7 +79,7 @@ class BaseConfig:
     temp_amount=3
     heartbeat_interval = 20
     write_bunch=10
-    write_delay=0.1
+    write_delay=0
     # write_interval=0.6
     # 写灯光命令时，每写write_bunch个，就读一次stroke。避免长时间阻塞。
 
@@ -107,7 +107,7 @@ class Test77(BaseConfig):
     all_loaded_required = False
 
 class Test71(BaseConfig):
-    module_amount = 1
+    module_amount = 4
     u_count=52
     temp_amount=3
     color_map=color4

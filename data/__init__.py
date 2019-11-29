@@ -197,8 +197,8 @@ class DataCenter(dict):
 
     def update_light(self,code):
         "code=(module_id,index,light)"
-        mid,index,light=code
-        self.vanila_light[mid][index]=light
+        mid,index,status=code.module_id,code.index,code.status
+        self.vanila_light[mid][index]=status
 
     @property
     def json_tencent_status(self):
