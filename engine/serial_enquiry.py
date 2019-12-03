@@ -3,7 +3,7 @@
 import time
 import random
 from setting import setting
-from loggers import rlog,elog
+from loggers import rlog,elog,clog
 from utils.bytes import map_output_hex,map_long,map_hex
 from utils.crc16 import crc16,modify_str,verify
 
@@ -41,7 +41,6 @@ class Codes(object):
 
 def enquiry(ser, code, count):
     ser.write(code)
-    # print("enquirying...",map_long(code))
     recv = ser.read(count)
     if not verify(recv):
         rlog('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
@@ -53,14 +52,15 @@ def enquiry_again(ser,code,count,allow):
         elog('Enquiry failed after %s times'%(allow-1))
         raise Exception('Enquiry failed after %s times'%(allow-1))
     rlog("trying x%s times"%(allow+1))
+    time.sleep(0.2)
+    ser.reset_input_buffer()
+    ser.reset_output_buffer()
     ser.write(code)
-    # print("enquirying...",map_long(code))
     recv = ser.read(count)
     if not verify(recv):
         rlog('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
         return enquiry_again(ser,code,count,allow+1)
     return recv
-
 
 def write_enquiry(ser, code, interval):
     ser.write(code)
@@ -71,7 +71,6 @@ def write_enquiry(ser, code, interval):
         if not verify(recv):
             print('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
         return recv
-
     else:
         print("enquriy for <%s> has no reply(0 length)" %
                         map_long(code))

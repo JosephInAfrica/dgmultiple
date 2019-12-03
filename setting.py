@@ -43,6 +43,7 @@ class setting:
     logsdir = join(basedir, "logs")
     regular_log = join(logsdir, "regular.log")
     error_log = join(logsdir, "error.log")
+    code_log = join(logsdir, "code.log")
     ip_config=ip_config
     # for_tencnet值0,1分别代表模块和标签的id按腾讯的要求加工/采用原始数据。
     for_tencent=0

@@ -57,9 +57,9 @@ def recover_blink(dataCenter):
 
     with open(setting.backup_blink, 'r') as file:
         try:
-            self.blink_freq = json.loads(file.read())
+            dataCenter.blink_freq = json.loads(file.read())
             print("成功载入闪灯频率")
-            print(self.blink_freq)
+            print(dataCenter.blink_freq)
         except Exception as e:
             print("没有载入闪灯频率==>")
             elog(e)

@@ -30,7 +30,7 @@ class DataFeeder(object):
     # 需要重构。不用存那么多 raw.data.只存 code 就行了。
 
     stop = False
-    commandList = []
+    commandList = set()
     online_modules = []
     recurLight = False
 
@@ -49,8 +49,10 @@ class DataFeeder(object):
             elogger.exception(e)
 
     def run_command(self, codes):
-        rlog("new commands included==>%s"%codes)
-        self.commandList.extend(codes)
+        rlog("new codes added to command lists")
+        for code in codes:
+            rlog(code)
+            self.commandList.add(code)
 
 
     @gen.coroutine
@@ -59,6 +61,7 @@ class DataFeeder(object):
             print("not allowed to upload")
             return
         yield upload(dataCenter.host,setting.url_status,dataCenter.status_to_upload)
+        # yield upload(dataCenter.host,setting.url_status,dataCenter.status_to_upload)
 
     @gen.coroutine
     def upload_temp(self):
@@ -180,11 +183,12 @@ class DataFeeder(object):
             if temp_updated:
                 print("temp_upadated",temp_updated)
             new_modules = dataCenter.vanila_status.keys()
-            re_onshelf = watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("re_onshelf")
-            if re_onshelf:
-                print("re_onshelf",re_onshelf)
 
-            going_off=watch_modules(old_modules, new_modules, dataCenter.registered_modules).get("going_off")
+            watched = watch_modules(old_modules, new_modules, dataCenter.registered_modules)
+            re_onshelf = watched.get("re_onshelf")
+
+            going_off=watched.get("going_off")
+       
             if going_off:
                 print("going_off",going_off)
 
@@ -197,9 +201,15 @@ class DataFeeder(object):
             if temp_updated:
                 yield self.upload_temp()
 
-
             if re_onshelf:
-                print("Module reonshelf:==>",re_onshelf)
+                rlog("Module reonshelf:==>%s"%re_onshelf)
+
+            # rlog("dataCenter.all_modules_seen==>%s"%dataCenter.all_modules_seen)
+            # rlog("dataCenter.all_loaded==>%s"%dataCenter.all_loaded)
+
+            if re_onshelf and dataCenter.all_modules_seen:
+                rlog("all modules seen!!! and reonshelf!!!!")
+                # rlog("Module reonshelf:==>%s"%re_onshelf)
                 self.run_command(dataCenter.online_light_commands)
 
             self._runCommand(all_loaded_required=setting.all_loaded_required)

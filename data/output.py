@@ -1,15 +1,19 @@
 #!encoding=utf8
 
+import copy
+from setting import setting
+
 "改版新的信息格式。去除对map的依赖，以便过渡到gRPC"
 
 def new_status(vanila):
 	results=[]
-	for key,module in vanila.items():
+	for key,module in copy.deepcopy(vanila).items():
 		results.append(treat_module(module))
-	return results
+	return {"modules":results}
 
 def treat_module(module):
 	# status=module.get("status")
+
 	module["status"]=treat_status(module["status"])
 	return module
 
@@ -23,7 +27,7 @@ def new_temp(vanila):
 	results=[]
 	for mid,content in vanila.items():
 		results.append(treat_single_temp(mid,content))
-	return results
+	return {"temps":results}
 
 def treat_single_temp(mid,content):
 	result={}
@@ -41,7 +45,7 @@ def new_light(vanila):
 	results=[]
 	for mid,content in vanila.items():
 		results.append(treat_single_light(mid,content))
-	return results
+	return {"lights":results}
 
 
 def treat_single_light(mid,content):

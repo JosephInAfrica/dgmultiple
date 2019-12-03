@@ -12,7 +12,7 @@ regularformatter = logging.Formatter(
     '%(asctime)s %(message)s', datefmt='%m/%d/ %I:%M')
 
 
-def createLogger(logFile, formatterF):
+def createLogger(logFile, formatterF,level):
     if not os.path.exists(setting.logsdir):
         os.mkdir(setting.logsdir)
 
@@ -20,7 +20,7 @@ def createLogger(logFile, formatterF):
         open(logFile, 'a').close()
 
     logger = logging.getLogger(logFile)
-    logger.setLevel(logging.WARNING)
+    logger.setLevel(level)
     fileHandler = logging.handlers.RotatingFileHandler(
         logFile, mode="a", maxBytes=5 * 1024 * 1024, backupCount=2)
 
@@ -28,9 +28,9 @@ def createLogger(logFile, formatterF):
     logger.addHandler(fileHandler)
     return logger
 
-rlogger = createLogger(setting.regular_log, regularformatter)
-elogger = createLogger(setting.error_log, regularformatter)
-
+rlogger = createLogger(setting.regular_log, regularformatter,logging.WARNING)
+elogger = createLogger(setting.error_log, regularformatter,logging.WARNING)
+codeLogger=createLogger(setting.code_log,regularformatter,logging.WARNING)
 
 def rlog(message):
     rlogger.warning(message)
@@ -46,3 +46,10 @@ def elog(message):
         os.system("sync")
     except Exception as e:
         pass
+
+def clog(message):
+    codeLogger.warning(message)
+    try:
+        os.system('sync')
+    except Exception as e:
+        print(e)

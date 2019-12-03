@@ -53,48 +53,39 @@ class DataCenter(dict):
 
     @property
     def online_light(self):
+        # here online means module is online. Not certainly module is in full length.
         light = {}
         for key in self.vanila_light.keys():
             if key in self.vanila_status.keys():
                 light[key] = self.vanila_light[key]
         return light
 
-    def reonline_light_commands(self,reon_modules):
-        "这是用来恢复灯光的。不在线的就不管了。"
-        light={}
-        for key in self.vanila_light.keys():
-            if key not in reon_modules:
-                continue
-            if key in self.vanila_status.keys():
-                light[key] = self.vanila_light[key]
-        return from_light_to_executables(light, self.vanila_status)
-
-    @property
-    def light_codes(self):
-        return from_light_to_codes(self.vanila_light)
 
     @property
     def new_status(self):
-        return _new_status(self.vanila_status)
+        result= _new_status(self.vanila_status)
+        result["address"]=self.network.get("address")
+        return result
 
 
     @property
     def new_temp(self):
-        return _new_temp(self.vanila_temp)
+        result=_new_temp(self.vanila_temp)
+        result["address"]=self.network.get("address")
+        return result
 
     @property
     def new_light(self):
-        return _new_light(self.vanila_light)
+        result= _new_light(self.vanila_light)
+        result["address"]=self.network.get("address")
+        return result
 
 
     @property
     def status(self):
-        
         return {self.network.get("address"): {"status":self.vanila_status, "light": self.vanila_light}}
 
-    # @property
-    # def to_upload(self):
-    #     return {self.network.get("address"): {"status":self.vanila_status, "light": self.vanila_light}}
+
 
     @property
     def status_to_upload(self):
@@ -128,8 +119,6 @@ class DataCenter(dict):
     @property
     # 判断是否模块全部在线。状态。
     def all_loaded(self):
-        if len(self.vanila_status)==0:
-            return False
         for content in self.vanila_status.values():
             if not content.get("u_count") >= setting.u_count:
                 return False
@@ -137,8 +126,15 @@ class DataCenter(dict):
             return False
         return True
 
+
+    @property
+    def all_modules_seen(self):
+        return len(self.vanila_status)==setting.module_amount
+
+
     def parse_blink(self):
         pass
+
 
     @property
     def temp_hum(self):
