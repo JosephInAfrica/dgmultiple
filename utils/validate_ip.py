@@ -1,12 +1,4 @@
-# def validate(addr):
-#     "validate an ip address like 100.100.100.100:20"
-#     if type(addr) not str:
-#         return 0
-#     if ":" in addr:
-#         addr, port = addr.split(":")
-
-#         return validate_ip(addr)
-
+#!encoding=utf8
 
 def validate_ip(addr):
     "validate an ip address like 100.100.100.100"
@@ -27,5 +19,3 @@ def validate_ip(addr):
             return 0
     return 1
 
-
-# print(validate_ip("0.100.100.100"))

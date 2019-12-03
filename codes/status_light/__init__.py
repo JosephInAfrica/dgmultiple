@@ -13,7 +13,7 @@ def from_light_to_executables(light, raw_status):
 
     codes=[Code(*i,raw_status=raw_status) for i in codes]
     return codes
-    # return (executables,codes)
+
 
 
 def purify_light(light):
