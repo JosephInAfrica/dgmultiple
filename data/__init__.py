@@ -172,7 +172,7 @@ class DataCenter(dict):
             file.write(json.dumps(self.blink_freq))
             try:
                 os.system("sync")
-                print("saved==>", self.blink_freq)
+                # print("saved==>", self.blink_freq)
             except:
                 pass
 
@@ -181,7 +181,7 @@ class DataCenter(dict):
             file.write(json.dumps(self.vanila_light))
             try:
                 os.system("sync")
-                print("saved==>", self.vanila_light)
+                # print("saved==>", self.vanila_light)
             except:
                 pass
 

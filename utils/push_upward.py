@@ -30,4 +30,4 @@ def upload(uri, address, content):
         t=t1-t0
         rlog("uploaded success!!<%s:%s><content %s><in %s s>"%(uri,address,content,t))
     except Exception as e:
-        rlog("upload failed!!<%s:%s><content %s><error %s>"%(uri,address,content,e))
+        elog("upload failed!!<%s:%s><content %s><error %s>"%(uri,address,content,e))

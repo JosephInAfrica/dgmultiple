@@ -51,7 +51,7 @@ def enquiry_again(ser,code,count,allow):
     if allow>=setting.allow_enquiry_fail:
         elog('Enquiry failed after %s times'%(allow-1))
         raise Exception('Enquiry failed after %s times'%(allow-1))
-    rlog("trying x%s times"%(allow+1))
+
     time.sleep(0.2)
     ser.reset_input_buffer()
     ser.reset_output_buffer()

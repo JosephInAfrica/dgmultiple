@@ -5,7 +5,7 @@ import md5
 from tornado import gen
 from tornado.ioloop import IOLoop
 from setting import setting
-from loggers import elogger, rlogger, rlog, elog
+from loggers import elogger, rlogger, rlog, elog,plog
 from serial_enquiry import modify_str, write_enquiry,write_enquiry_fast, Codes
 from data import dataCenter
 from check_module import check_module
@@ -49,6 +49,7 @@ class DataFeeder(object):
             elogger.exception(e)
 
     def run_command(self, codes):
+        
         rlog("new codes added to command lists")
         for code in codes:
             rlog(code)
@@ -58,23 +59,17 @@ class DataFeeder(object):
     @gen.coroutine
     def upload_status(self):
         if not setting.upload:
-            print("not allowed to upload")
             return
         yield upload(dataCenter.host,setting.url_status,dataCenter.status_to_upload)
-        # yield upload(dataCenter.host,setting.url_status,dataCenter.status_to_upload)
 
     @gen.coroutine
     def upload_temp(self):
         if not setting.upload:
-            print("not allowed to upload")
             return
         yield upload(dataCenter.host,setting.url_temp,dataCenter.temp_to_upload)
 
     @gen.coroutine
     def heart_beat(self):
-        if not setting.heart_beat:
-            print("heart beat off.")
-            return
         while 1:
             yield gen.sleep(setting.heartbeat_interval)
             beat = {"heartBeat": dataCenter.network.get("address")}
@@ -113,7 +108,6 @@ class DataFeeder(object):
         "这个stroke是取数据冲程。"
         # print("strike")
         def valid(t):
-            # check if every temp hum is valid.
             for i in t[:3]:
                 if i[2] == 0:
                     return 0
@@ -121,13 +115,11 @@ class DataFeeder(object):
 
         status_modules = {}
         temp_modules={}
-        # 除temp以外所有的
         updated = 0
         temp_updated = 0
         invalid_addr = []
 
         for code in [code.codes for code in codes]:
-            # 检查每一个module
             try:
                 result = check_module(self._ser, code)
             except Exception as e:
@@ -138,12 +130,7 @@ class DataFeeder(object):
             module_id = result.get('module_id')
 
             try:
-
                 dataCenter.registered_modules[module_id]=result.get("u_count")
-
-                #  更新一下temp.tempt
-
-                #  如果没有缓存，建立新的。
                 temp = result.get("temp_hum")[:setting.temp_amount]
                 if not dataCenter.vanila_temp.get(module_id):
                     dataCenter.vanila_temp[module_id]=[(-0.00,-0.00,0)]*setting.temp_amount
@@ -167,7 +154,7 @@ class DataFeeder(object):
                 dataCenter.vanila_status[module_id].pop("temp_hum")
             except Exception as e:
                 elogger.exception(e)
-        # print("temp updated",temp_updated)
+        plog("%s"%status_modules)
         raise gen.Return((status_modules,temp_modules, updated, temp_updated))
 
 
@@ -196,6 +183,7 @@ class DataFeeder(object):
                 yield self.upload_status()
 
             if going_off:
+                rlog("Module Gone OffShelf:==>%s"%going_off)
                 yield self.upload_status()
 
             if temp_updated:
@@ -203,9 +191,6 @@ class DataFeeder(object):
 
             if re_onshelf:
                 rlog("Module reonshelf:==>%s"%re_onshelf)
-
-            # rlog("dataCenter.all_modules_seen==>%s"%dataCenter.all_modules_seen)
-            # rlog("dataCenter.all_loaded==>%s"%dataCenter.all_loaded)
 
             if re_onshelf and dataCenter.all_modules_seen:
                 rlog("all modules seen!!! and reonshelf!!!!")

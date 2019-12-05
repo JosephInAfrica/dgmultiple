@@ -21,7 +21,6 @@ class WebThread(Thread):
         # 创建app时要先新建ioloop。否则app Listen时会自动找到IOLoop.Current().它会创建new ioloop或IOLoop.instance().
         app = Application(urlmap, **tornado_setting)
         app.listen(9999, "127.0.0.1")
-        print("web thread", id(ioloop))
         ioloop.start()
         # logging.warning("web started")
 
@@ -32,7 +31,6 @@ class FeedThread(Thread):
         Thread.__init__(self, name="feedThread")
 
     def run(self):
-        print("feed thread ", id(IOLoop.current()))
         dataFeeder.run()
         IOLoop.current().start()
 
@@ -45,14 +43,11 @@ class HeartBeater(Thread):
     def run(self):
         ioloop = IOLoop()
         dataFeeder.heart_beat()
-        print("heatBeat thread", id(ioloop))
         ioloop.start()
 
 
 if __name__ == '__main__':
     WebThread().start()
-    if setting.heart_beat:
+    if setting.upload:
         HeartBeater().start()
-    else:
-        print("heart_beat turned off")
     FeedThread().start()

@@ -44,14 +44,13 @@ class setting:
     regular_log = join(logsdir, "regular.log")
     error_log = join(logsdir, "error.log")
     code_log = join(logsdir, "code.log")
+    parse_log = join(logsdir, "parse.log")
     ip_config=ip_config
     # for_tencnet值0,1分别代表模块和标签的id按腾讯的要求加工/采用原始数据。
-    for_tencent=0
+    for_tencent=1
     upload = 1
-    heart_beat = 1
-    light_range = range(16)
 
-    allow_temp_failure = 0
+    allow_temp_failure =2
     allow_enquiry_fail=2
 
     url_status = "/status"

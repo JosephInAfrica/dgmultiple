@@ -31,6 +31,7 @@ def createLogger(logFile, formatterF,level):
 rlogger = createLogger(setting.regular_log, regularformatter,logging.WARNING)
 elogger = createLogger(setting.error_log, regularformatter,logging.WARNING)
 codeLogger=createLogger(setting.code_log,regularformatter,logging.WARNING)
+parseLogger=createLogger(setting.parse_log,regularformatter,logging.WARNING)
 
 def rlog(message):
     rlogger.warning(message)
@@ -49,6 +50,13 @@ def elog(message):
 
 def clog(message):
     codeLogger.warning(message)
+    try:
+        os.system('sync')
+    except Exception as e:
+        print(e)
+
+def plog(message):
+    parseLogger.warning(message)
     try:
         os.system('sync')
     except Exception as e:

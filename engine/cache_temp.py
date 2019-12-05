@@ -34,7 +34,6 @@ def update_temp(temp,temp_cache,failure_cache,allow_failure):
 				rlog("no more cache!")
 				temp_cache[i]=temp[i]
 				updated=1
-
 	return updated
 
 

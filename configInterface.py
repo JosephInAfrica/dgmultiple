@@ -34,7 +34,6 @@ def set_network_config(kwargs):
 
     if not (is_valid(netmask) and is_valid(gateway) and is_valid(address) and is_valid(dns)):
         elog("invalid config")
-        print("invalid config")
         # 检测三个数据都不为空。
 
     to_write = network_temp.generate(**kwargs)
@@ -42,8 +41,7 @@ def set_network_config(kwargs):
     with open(setting.ip_config, 'w') as file:
         file.write(to_write)
     os.system("sync")
-    print("network config synced")
-
+    rlog("ip config synced")
 
 def get_network_config():
     "从系统中读取到配置文件"

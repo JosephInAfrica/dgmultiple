@@ -22,7 +22,7 @@ def parse(raw_status, dic):
 
     if error_data.get("err_code"):
         # 如果err_code不为零，即有错误。
-        print("数据错误：err_code", error_data)
+        elog("数据错误：err_code:%s"%error_data)
         return (None, to_cache, error_data)
 
     for (u_id, period) in middle_results.items():
@@ -37,7 +37,7 @@ def parse(raw_status, dic):
         codes.append(code)
     # 这里将两段的错误码拼了起来。达到了不损失细节的目的。
     # if not error_data:
-    print("codes,to_cache,error_data====", codes, to_cache, error_data)
+    rlog("codes<%s>,to_cache<%s>,error_data<%s>===="%(codes, to_cache, error_data))
     return (codes, to_cache, error_data)
 
 
