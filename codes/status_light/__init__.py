@@ -4,9 +4,10 @@
 "这个包是关于解析用户输入的灯光信息;输出要执行的设置代码和更新全局变量;"
 from _parse_input import parse
 from _filter import rid_redundant
-from generate_executables import Code
+from generate_executables import Code,purge_old
 from pget import get_light, get_tag
 from loggers import rlog
+
 # from _from_light_to_codes import from_light_to_codes
 
 def from_light_to_executables(light, raw_status):

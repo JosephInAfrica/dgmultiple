@@ -50,8 +50,9 @@ class setting:
     for_tencent=1
     upload = 1
 
-    allow_temp_failure =2
+    allow_temp_failure =0
     allow_enquiry_fail=2
+    allow_write_enquiry_fail=2
 
     url_status = "/status"
     url_heartbeat = "/heartbeat"

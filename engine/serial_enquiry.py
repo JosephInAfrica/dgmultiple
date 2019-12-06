@@ -62,9 +62,48 @@ def enquiry_again(ser,code,count,allow):
         return enquiry_again(ser,code,count,allow+1)
     return recv
 
-def write_enquiry(ser, code, interval):
-    ser.write(code)
+
+def write_enquiry(ser, code,interval):
     time.sleep(interval)
+    # ser.reset_input_buffer()
+    # ser.reset_output_buffer()
+    t0=time.time()
+    ser.write(code)
+    recv = ser.read(8)
+    t1=time.time()
+    # print("write time spent <%ss>"%(t1-t0))
+    if not verify(recv):
+        print('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
+            hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
+        # write_enquiry_again(ser,code,interval,count=2)
+    return recv
+        
+
+def write_enquiry_again(ser, code, interval,count):
+    if time>setting.allow_write_enquiry_fail:
+        rlog('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
+            hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
+        return
+
+    time.sleep(interval)
+    # ser.reset_input_buffer()
+    # ser.reset_output_buffer()
+    t0=time.time()
+    ser.write(code)
+    recv = ser.read(8)
+    t1=time.time()
+    # print("write time spent <%ss>"%(t1-t0))
+    if not verify(recv):
+        print('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
+            hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
+        write_enquiry_again(ser,code,interval,count+1)
+    return recv
+        
+
+    time.sleep(interval)
+    ser.reset_input_buffer()
+    ser.reset_output_buffer()
+    ser.write(code)
     count = ser.inWaiting()
     if count > 0:
         recv = ser.read(count)
@@ -75,20 +114,6 @@ def write_enquiry(ser, code, interval):
         print("enquriy for <%s> has no reply(0 length)" %
                         map_long(code))
         return ""
-        
-
-def write_enquiry_fast(ser, code,interval):
-    time.sleep(interval)
-    t0=time.time()
-    ser.write(code)
-    recv = ser.read(8)
-    t1=time.time()
-    # print("write time spent <%ss>"%(t1-t0))
-    if not verify(recv):
-        print('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
-            hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
-
-    return recv
 
 
 

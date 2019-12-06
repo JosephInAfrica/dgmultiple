@@ -6,13 +6,14 @@ from tornado import gen
 from tornado.ioloop import IOLoop
 from setting import setting
 from loggers import elogger, rlogger, rlog, elog,plog
-from serial_enquiry import modify_str, write_enquiry,write_enquiry_fast, Codes
+from serial_enquiry import modify_str, write_enquiry, Codes
 from data import dataCenter
 from check_module import check_module
 from watch_modules import watch_modules
 from utils.push_upward import upload
 import json
 from codes.temp_hum import init_temp
+from codes.status_light import purge_old
 from cache_temp import update_temp
 from utils.bytes import map_long 
 
@@ -30,13 +31,13 @@ class DataFeeder(object):
     # 需要重构。不用存那么多 raw.data.只存 code 就行了。
 
     stop = False
-    commandList = set()
+    commandList = []
     online_modules = []
     recurLight = False
 
     @gen.coroutine
     def to_start_up(self):
-        self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=2)
+        self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=3)
         print("init temp modules.")
         print(setting.__dict__)
         try:
@@ -49,11 +50,9 @@ class DataFeeder(object):
             elogger.exception(e)
 
     def run_command(self, codes):
-        
-        rlog("new codes added to command lists")
         for code in codes:
-            rlog(code)
-            self.commandList.add(code)
+            self.commandList=purge_old(code,self.commandList)
+            self.commandList.append(code)
 
 
     @gen.coroutine
@@ -77,6 +76,11 @@ class DataFeeder(object):
 
 
     def _runCommand(self, all_loaded_required=True):
+        # rlog("commandLists:===>")
+        for i in self.commandList:
+            # rlog("")
+            print(i)
+
         "never call it directly. Call it by modifying feeders's command List.传入一个codeList,会按顺序执行。然后清空command_list."
         if not self.commandList:
             return
@@ -91,11 +95,12 @@ class DataFeeder(object):
                 break
             i = self.commandList.pop()
             rlog("enquirying: %s"%i)
-            feedback = write_enquiry_fast(self._ser, i.code,setting.write_delay)
+            feedback = write_enquiry(self._ser, i.code,setting.write_delay)
             if not feedback==i.code:
-                rlog("feedback<%s>||code<%s>"%(map_long(feedback),map_long(i.code)))
-                rlog("added <%s> to list.will do it again."%i)
-                self.run_command([i])
+                rlog("feedback<%s>||code<%s>.SeeUAgain"%(map_long(feedback),i))
+                # rlog("added <%s> to list.will do it again."%i)
+                # self.run_command([i])
+                self.commandList.append(i)
             else:
                 dataCenter.update_light(i)
         dataCenter.save_light()

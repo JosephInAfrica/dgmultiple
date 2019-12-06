@@ -5,11 +5,14 @@
 from setting import setting
 from utils.crc16 import modify_str
 from utils.bytes import ord_to_hex
-# def codes_to_codes(codes, raw_status):
-#     if not codes:
-#         return []
-#     return [Code(*code, raw_status) for code in codes]
 
+def purge_old(one,ones):
+    result=[]
+    for i in ones:
+        if i.module_index==one.module_index:
+            continue    
+        result.append(i)
+    return result
 
 class Code(object):
     # module_id
@@ -19,11 +22,15 @@ class Code(object):
         self.status=status
         self.raw_status=raw_status
         self.address=raw_status.get(module_id).get("address")
-        # 感觉写得很烂 
+
     @property
     def code(self):
         return _code_to_code((self.module_id,self.index,self.status),self.raw_status)
-        
+
+    @property
+    def module_index(self):
+        return "%s%s"%(self.module_id,self.index)
+
     def __repr__(self):
         return "<LightColor>module:%s address:%s index:%s status:%s"%(self.module_id,self.address,self.index,self.status)
 

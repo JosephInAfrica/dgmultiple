@@ -1,2 +1,3 @@
-a=[1,2,3,4]
-b=OrderedSet([1,2,3])
+a=1
+b=1 if a==2 else a
+print(b)
