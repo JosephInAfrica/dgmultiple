@@ -4,7 +4,7 @@ from tornado import template
 import re
 import os
 from setting import setting
-from loggers import elog, elogger
+from loggers import elog, elogger,rlog
 
 network_temp = template.Template('''
 # !/bin/sh -e
@@ -41,7 +41,7 @@ def set_network_config(kwargs):
     with open(setting.ip_config, 'w') as file:
         file.write(to_write)
     os.system("sync")
-    rlog("ip config synced")
+    # rlog("ip config synced")
 
 def get_network_config():
     "从系统中读取到配置文件"

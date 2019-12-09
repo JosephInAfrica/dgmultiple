@@ -188,7 +188,11 @@ class DataCenter(dict):
 
     def update_light(self,code):
         "code=(module_id,index,light)"
-        mid,index,status=code.module_id,code.index,code.status
+        # if code.
+        try:
+            mid,index,status=code.module_id,code.index,code.status
+        except:
+            return
         if self.vanila_light.get(mid):
             self.vanila_light[mid][index]=status
         else:

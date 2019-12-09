@@ -75,7 +75,7 @@ class DataFeeder(object):
             results = yield upload(dataCenter.host,setting.url_heartbeat,beat)
 
 
-    def _runCommand(self, all_loaded_required=True):
+    def _runCommand(self):
         # rlog("commandLists:===>")
         for i in self.commandList:
             # rlog("")
@@ -84,7 +84,7 @@ class DataFeeder(object):
         "never call it directly. Call it by modifying feeders's command List.传入一个codeList,会按顺序执行。然后清空command_list."
         if not self.commandList:
             return
-        if all_loaded_required:
+        if setting.all_loaded_required:
             if not dataCenter.all_loaded:
                 rlog("not fully loaded.See you next time.")
                 return
@@ -202,7 +202,7 @@ class DataFeeder(object):
                 # rlog("Module reonshelf:==>%s"%re_onshelf)
                 self.run_command(dataCenter.online_light_commands)
 
-            self._runCommand(all_loaded_required=setting.all_loaded_required)
+            self._runCommand()
         except Exception as e:
             elogger.exception(e)
 

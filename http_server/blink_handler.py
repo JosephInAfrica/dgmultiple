@@ -28,7 +28,7 @@ class BlinkHandler(RequestHandler):
             self.finish()
 
         codes_to_execute, cache_dic, error_data = dataCenter.parse_blink_freq(data)
-        dataFeeder.blink_freq = cache_dic
+        dataCenter.blink_freq = cache_dic
         dataCenter.save_blink()
         dataFeeder.run_command(codes_to_execute)
         self.write(json.dumps(error_data))

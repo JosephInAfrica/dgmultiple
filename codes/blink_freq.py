@@ -4,6 +4,8 @@
 
 from utils.crc16 import modify_str as modify
 from utils.bytes import ord_to_hex
+from loggers import rlog,elog
+
 
 def parse(raw_status, dic):
     # "输入raw_status,dic,输出[运行代码，缓存状态dict:{"pm01":3000,"pm02":500}   和错误状态。输出缓存状态以便存盘重现。"
@@ -67,6 +69,10 @@ class Code:
         self.u_id=u_id
         self.period=period
         self.raw_status=raw_status
+
+    @property
+    def module_index(self):
+        return self.raw_status.get(self.u_id).get("address")
 
     @property
     def code(self):

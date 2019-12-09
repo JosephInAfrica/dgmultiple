@@ -56,8 +56,8 @@ def treat_post(dic, raw_light, raw_status, light_range):
     "需要raw_status参与，会修改raw_light"
     "会返回error_data,codes_to_execute，并改变raw_status的值。"
     "将error_data返回给post，将codes_to_execute给engine来执行。本函数应该在handle post里"
-    rlog("raw_light:%s"%raw_light)
-    rlog("raw_status:%s"%raw_status)
+    # rlog("raw_light:%s"%raw_light)
+    # rlog("raw_status:%s"%raw_status)
     error_data, light_codes = parse(dic, raw_status, light_range)
     # 生成错误代码和灯代码。
 

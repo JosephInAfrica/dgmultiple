@@ -48,28 +48,27 @@ class setting:
     ip_config=ip_config
     # for_tencnet值0,1分别代表模块和标签的id按腾讯的要求加工/采用原始数据。
     for_tencent=1
-    upload = 1
+    upload = 0
 
-    allow_temp_failure =0
-    allow_enquiry_fail=2
+    allow_temp_failure =5
+    allow_enquiry_fail=3
     allow_write_enquiry_fail=2
 
     url_status = "/status"
     url_heartbeat = "/heartbeat"
     url_temp="/temp"
-    all_loaded_required = True
     write_bunch=10
     write_delay=0
 
 # 自检参照 按实际情况配置 应该可以导入文件 web api
     color_map=color.get(int(conf.get("mechanics","lightcolor")))
     light_range=range(int(conf.get("mechanics","lightcolor")))
-    module_amount = int(conf.get("hardware","module_amount")) or 1
-    u_count=int(conf.get("hardware","u_count")) or 52
-    temp_amount=int(conf.get("hardware","temp_amount")) or 3
-    heartbeat_interval = int(conf.get("mechanics","heartbeat_interval")) or 20
-    request_timeout=int(conf.get("mechanics","request_timeout")) or 5
-    all_loaded_required=int(conf.get("mechanics","all_loaded_required")) or 1
+    module_amount = int(conf.get("hardware","module_amount"))
+    u_count=int(conf.get("hardware","u_count"))
+    temp_amount=int(conf.get("hardware","temp_amount"))
+    heartbeat_interval = int(conf.get("mechanics","heartbeat_interval"))
+    request_timeout=int(conf.get("mechanics","request_timeout"))
+    all_loaded_required=int(conf.get("mechanics","all_loaded_required"))
     
 tornado_setting = dict(
     template_path=os.path.join(os.path.dirname(__file__), "http_server", "templates"),

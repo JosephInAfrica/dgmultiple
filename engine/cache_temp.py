@@ -25,7 +25,6 @@ def update_temp(temp,temp_cache,failure_cache,allow_failure):
 				temp_cache[i]=temp[i]
 			failure_cache[i]=0
 		else:
-
 			if not valid(temp_cache[i]):
 				continue
 			failure_cache[i]+=1
@@ -35,11 +34,3 @@ def update_temp(temp,temp_cache,failure_cache,allow_failure):
 				temp_cache[i]=temp[i]
 				updated=1
 	return updated
-
-
-
-
-
-
-
-
