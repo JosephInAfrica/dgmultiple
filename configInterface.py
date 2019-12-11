@@ -3,7 +3,7 @@
 from tornado import template
 import re
 import os
-from setting import setting
+from setting import setting,get_network_config,conf,save_conf
 from loggers import elog, elogger,rlog
 
 network_temp = template.Template('''
@@ -41,25 +41,17 @@ def set_network_config(kwargs):
     with open(setting.ip_config, 'w') as file:
         file.write(to_write)
     os.system("sync")
-    # rlog("ip config synced")
 
-def get_network_config():
-    "从系统中读取到配置文件"
-    file = setting.ip_config
 
-    def parse(file):
-        import re
-        ip_ = re.compile("\d+\.\d+\.\d+\.\d+")
-        with open(file, 'r') as file:
-            lines = file.readlines()
 
-        ips = [re.findall(ip_, line) for line in lines]
-        ips = [ip[0] for ip in ips if ip]
-        ip, netmask, gateway, dns = ips
+def set_hardware_config(dic):
+    for key,value in dic.items():
+        conf.set("hardware",key,value)
+    save_conf()
+    os.system("sync")
 
-        return dict(address=ip, netmask=netmask, gateway=gateway, dns=dns)
-
-    return parse(file)
+def get_hardware_config():
+    return dict(conf.items("hardware"))
 
 
 def is_valid(address):

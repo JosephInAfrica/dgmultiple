@@ -19,6 +19,11 @@ color={16:color16,4:color4}
 conf=ConfigParser()
 conf.read(user_config)
 
+def save_conf():
+    with open(user_config,"wb") as file:
+        conf.write(file)
+
+
 def get_network_config():
     "从系统中读取到配置文件"
     def parse(file):

@@ -62,6 +62,49 @@
         </div>
       </div>
 
+
+      <div class="py-5 text-center">
+        <h2>Hardware Config</h2>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 order-md-1">
+          <div class="row">
+            <div class="col-sm-4 mb-4">
+              <label for="address">模块数量</label>
+              <input type="text" class="form-control required" id="module_amount" name="module_amount" placeholder="" v-model="module_amount" required="">
+              <div class="invalid-feedback">
+                Valid number is required.
+              </div>
+            </div>
+
+
+            <div class="col-sm-4 mb-4">
+              <label for="mask">模块长度(U位数)</label>
+              <input type="text" class="form-control required" id="u_count" name="u_count"  v-model="u_count" required="">
+              <div class="invalid-feedback">
+                Valid number is required.
+              </div>
+            </div>
+
+            <div class="col-sm-4 mb-4">
+              <label for="netgate">温湿度个数</label>
+              <input type="text" class="form-control required" id="temp_amount" name="temp_amount" v-model="temp_amount" required="">
+              <div class="invalid-feedback">
+                Valid number is required.
+              </div>
+            </div>
+
+          </div>
+          <button v-on:click="setHardwareConfig" class="btn btn-primary btn-lg btn-block">更新硬件设置</button>
+          <!-- </form> -->
+        </div>
+      </div>
+
+
+
+
+
   </div>
 </main>
 {% end %}

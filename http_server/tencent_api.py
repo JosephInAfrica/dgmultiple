@@ -14,9 +14,7 @@ from engine import dataFeeder
 
 json.encoder.FLOAT_REPR = lambda x: format(x, '.1f')
 
-
 class ApiTencent(RequestHandler):
-
     @gen.coroutine
     def get(self):
         self.set_header("Content-Type","application/json")

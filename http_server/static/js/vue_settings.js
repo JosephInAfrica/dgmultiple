@@ -7,12 +7,17 @@ var vue_settings = new Vue({
     gateway: "",
     alert: "",
     dns:"",
-
+    module_amount:1,
+    u_count:52,
+    temp_amount:3
   },
   computed: {
     network_config: function() {
       return { "address": this.address, "netmask": this.netmask, "gateway": this.gateway,"dns":this.dns}
     },
+    hardware_config:function(){
+      return{"module_amount":this.module_amount,"u_count":this.u_count,"temp_amount":this.temp_amount}
+    }
 
 
   },
@@ -21,14 +26,24 @@ var vue_settings = new Vue({
       var self = this;
       getAjax('/network', function(data) {
         var data_ = JSON.parse(data);
-        if (data_.status == "ok") {
-          self.address = data_.data.address;
-          self.netmask = data_.data.netmask;
-          self.gateway = data_.data.gateway;
-          self.dns = data_.data.dns;
-        };
+          self.address = data_.address;
+          self.netmask = data_.netmask;
+          self.gateway = data_.gateway;
+          self.dns = data_.dns;
       });
     },
+
+
+    getHardwareConfig:function(){
+      var self=this;
+      getAjax("/hardware-config",function(data){
+        var _data=JSON.parse(data);
+          self.module_amount=_data.module_amount;
+          self.u_count=_data.u_count;
+          self.temp_amount=_data.temp_amount;
+      })
+    },
+
 
     setNetworkConfig: function() {
       var self = this;
@@ -40,10 +55,26 @@ var vue_settings = new Vue({
           self.alert = data_.alert;
         }
       })
-    },},
+    },
+
+    setHardwareConfig:function(){
+      var self=this;
+      postAjax("/hardware-config",JSON.stringify(self.hardware_config),function(data){
+        var data_ = JSON.parse(data);
+        if (data_.status == 'not ok') {
+          self.alert = "网络设置没有改动"
+        } else {
+          self.alert = data_.alert;
+        }
+      })
+    }
+
+
+  },
 
   created: function() {
-    this.getNetworkConfig()
+    this.getNetworkConfig();
+    this.getHardwareConfig();
   },
 })
 
