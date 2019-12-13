@@ -11,7 +11,7 @@ from loggers import elogger, rlogger, rlog, elog
 from data import dataCenter
 from engine import dataFeeder
 from setting import setting
-from configInterface import get_network_config, set_network_config,get_hardware_config,set_hardware_config
+from configInterface import get_network_config, set_network_config,get_hardware_config,set_hardware_config,get_upstream_config,set_upstream_config
 import os
 
 
@@ -23,14 +23,12 @@ def defer_reboot(n):
 
 
 class BaseHandler(RequestHandler):
-
     @gen.coroutine
     def get_current_user(self):
         return self.get_secure_cookie('current_user')
 
 
 class NetworkConfig(BaseHandler):
-
     @gen.coroutine
     def get(self):
         current_config = get_network_config()
@@ -49,16 +47,10 @@ class NetworkConfig(BaseHandler):
             self.write(json.dumps({'status': 'error', 'alert': '请输入有效的网络配置'}))
             self.finish
 
-        if data == current_config:
-            self.write(json.dumps(
-                {'status': 'not ok', 'data': 'Config remain the same as before'}))
-
-        else:
-            # try:
-            set_network_config(dict(data))
-            defer_reboot(3)
-            self.write(json.dumps(
-                {'status': 'ok', 'alert': "即将重启设备。请到新的ip登录。"}))
+        set_network_config(dict(data))
+        defer_reboot(3)
+        self.write(json.dumps(
+            {'status': 'ok', 'alert': "即将重启设备。请到新的ip登录。"}))
 
         self.finish()
 
@@ -74,18 +66,34 @@ class HardwareConfig(BaseHandler):
         current_config=get_hardware_config()
         data = tornado.escape.json_decode(self.request.body)
         print("data", data)
-
-        if data == current_config:
-            self.write(json.dumps(
-                {'status': 'not ok', 'data': 'Config remain the same as before'}))        
-        else:
-            # try:
-            set_hardware_config(dict(data))
-            # defer_reboot(3)
-            self.write(json.dumps(
-                {'status': 'ok', 'alert': "设置成功。即将重启设备。"}))
+  
+        set_hardware_config(dict(data))
+        # defer_reboot(3)
+        self.write(json.dumps(
+            {'status': 'ok', 'alert': "设置成功。即将重启设备。"}))
 
         self.finish()
+
+
+class UpstreamConfig(BaseHandler):
+    @gen.coroutine
+    def get(self):
+        current_config=get_upstream_config()
+        self.write(json.dumps(current_config))
+        self.finish()
+
+    @gen.coroutine
+    def post(self):
+        # current_config=get_hardware_config()
+        data = tornado.escape.json_decode(self.request.body)
+
+        set_upstream_config(dict(data))
+        # defer_reboot(3)
+        self.write(json.dumps(
+            {'status': 'ok', 'alert': "设置成功。即将重启设备。"}))
+
+        self.finish()
+
 
 
 

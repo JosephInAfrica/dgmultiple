@@ -9,22 +9,26 @@ var vue_settings = new Vue({
     dns:"",
     module_amount:1,
     u_count:52,
-    temp_amount:3
+    temp_amount:3,
+    host:"",
+    status:"",
+    temp:""
   },
   computed: {
     network_config: function() {
       return { "address": this.address, "netmask": this.netmask, "gateway": this.gateway,"dns":this.dns}
     },
     hardware_config:function(){
-      return{"module_amount":this.module_amount,"u_count":this.u_count,"temp_amount":this.temp_amount}
+      return {"module_amount":this.module_amount,"u_count":this.u_count,"temp_amount":this.temp_amount}
+    },
+    upstream_config:function(){
+      return{"host":this.host,"status":this.status,"temp":this.temp}
     }
-
-
   },
   methods: {
     getNetworkConfig: function() {
       var self = this;
-      getAjax('/network', function(data) {
+      getAjax('/network-config', function(data) {
         var data_ = JSON.parse(data);
           self.address = data_.address;
           self.netmask = data_.netmask;
@@ -45,9 +49,19 @@ var vue_settings = new Vue({
     },
 
 
+    getUpstreamConfig:function(){
+      var self=this;
+      getAjax("/upstream-config",function(data){
+        var _data=JSON.parse(data);
+        self.host=_data.host;
+        self.status=_data.status;
+        self.temp=_data.temp;
+      })
+    },
+
     setNetworkConfig: function() {
       var self = this;
-      postAjax("/network", JSON.stringify(self.network_config), function(data) {
+      postAjax("/network-config", JSON.stringify(self.network_config), function(data) {
         var data_ = JSON.parse(data);
         if (data_.status == 'not ok') {
           self.alert = "网络设置没有改动"
@@ -62,19 +76,29 @@ var vue_settings = new Vue({
       postAjax("/hardware-config",JSON.stringify(self.hardware_config),function(data){
         var data_ = JSON.parse(data);
         if (data_.status == 'not ok') {
-          self.alert = "网络设置没有改动"
+          self.alert = "设置不成功"
         } else {
           self.alert = data_.alert;
         }
       })
+    },
+    setUpstreamConfig:function(){
+      var self=this;
+      postAjax("/upstream-config",JSON.stringify(self.upstream_config),function(data){
+        var data_=JSON.parse(data);
+        if (data_.status=="not ok"){
+          self.alert="设置不成功";
+        } else {
+          self.alert=data_.alert;
+        }
+      })
     }
-
-
   },
 
   created: function() {
     this.getNetworkConfig();
     this.getHardwareConfig();
+    this.getUpstreamConfig();
   },
 })
 

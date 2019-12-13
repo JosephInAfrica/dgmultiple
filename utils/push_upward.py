@@ -25,9 +25,11 @@ def upload(uri, address, content):
 
     try:
         t0=time()
-        yield client.fetch(req)
+        # print("to upload:",uri,address,content)
+        response=yield client.fetch(req)
         t1=time()
         t=t1-t0
-        # rlog("uploaded success!!<%s:%s><content %s><in %s s>"%(uri,address,content,t))
+        rlog("uploaded success!!<%s:%s><content %s><in %s s>"%(uri,address,content,t))
     except Exception as e:
         elog("upload failed!!<%s:%s><content %s><error %s>"%(uri,address,content,e))
+    raise gen.Return(response)

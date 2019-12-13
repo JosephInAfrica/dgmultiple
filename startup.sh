@@ -8,3 +8,9 @@ sleep 1
 /home/root/dgmini/forward &
 
 exit 0
+
+
+if [! -f /tmp/eth1.txt]; then 
+ifconfig eth1 > tmp/mac.txt
+fi
+

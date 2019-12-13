@@ -1,18 +1,24 @@
-from ConfigParser import ConfigParser
+# with open("d:/projects/root/mac.txt","r") as file:
+# 	a=file.read()
+# 	print(a)
+# b=a
 
-c=ConfigParser()
-c.read("default.conf")
-# print(c.__dict__)
-
-# c.set("hardware","module_amount",20)
-# print(c.__dict__)
-# # print(c.write())
+# import re
 
 
-# def save_conf():
-#     with open("default.conf","wb") as file:
-#         c.write(file)
+# # print(c)
+# 
+# print c.decode("hex")
 
-# print[i for i in c.sections()]
-a=c.items("hardware")
-print(dict(a))
+import re
+def get_mac(dir):
+	with open(dir,"r") as file:
+		para=file.read()
+	
+	e=re.compile(r"HWaddr\s+([0-9a-f:]+)")
+	c=re.findall(e,para)[0]
+	c=c.replace(":","")
+	return c.decode("hex")
+
+
+# print(get_mac("d:/projects/root/mac.txt"))

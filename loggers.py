@@ -49,7 +49,7 @@ def elog(message):
         pass
 
 def clog(message):
-    codeLogger.warning(message)
+    codeLogger.debug(message)
     try:
         os.system('sync')
     except Exception as e:

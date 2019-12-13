@@ -3,7 +3,7 @@
 from tornado import template
 import re
 import os
-from setting import setting,get_network_config,conf,save_conf
+from setting import setting,conf,save_conf
 from loggers import elog, elogger,rlog
 
 network_temp = template.Template('''
@@ -19,13 +19,7 @@ cp /usr/share/zoneinfo/Asia/Hong_Kong/etc/localtime
 
 
 def set_network_config(kwargs):
-    '''接收一个dict, 如{'netmask': '255.255.255.0', 'gateway': '192.168.0.1', 'address': '192.168.0.199'}。将其写入 / etc / network / interfaces'''
-    old_config = get_network_config()
-    try:
-        old_ip, old_netmask, old_gateway, old_dns = old_config
-    except Exception as e:
-        old_ip, old_netmask, old_gateway, old_dns = "", "", "", ""
-        rlog("failed to get old data")
+    '''接收一个dict, 如{'netmask': '255.255.255.0', 'gateway': '192.168.0.1', 'address': '192.168.0.199'}。'''
 
     address = kwargs.get('address')
     netmask = kwargs.get('netmask')
@@ -34,25 +28,39 @@ def set_network_config(kwargs):
 
     if not (is_valid(netmask) and is_valid(gateway) and is_valid(address) and is_valid(dns)):
         elog("invalid config")
+        return
         # 检测三个数据都不为空。
-
     to_write = network_temp.generate(**kwargs)
-
     with open(setting.ip_config, 'w') as file:
         file.write(to_write)
-    os.system("sync")
+
+    set_config("network")
 
 
-
-def set_hardware_config(dic):
-    for key,value in dic.items():
-        conf.set("hardware",key,value)
-    save_conf()
-    os.system("sync")
+def get_config(column):
+    return dict(conf.items(column))
 
 def get_hardware_config():
-    return dict(conf.items("hardware"))
+    return get_config("hardware")
 
+def get_upstream_config():
+    return get_config("upstream")
+
+def get_network_config():
+    return get_config("network")
+
+def set_config(column,dic):
+    for key,value in dic.items():
+        conf.set(column,key,value)
+    save_conf()
+    os.system("sync")    
+
+def set_upstream_config(dic):
+    set_config("upstream",dic)
+
+def set_hardware_config(dic):
+    set_config("hardware",dic)
+    
 
 def is_valid(address):
     "check is ip mask gate is valid 4 "

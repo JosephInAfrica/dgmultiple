@@ -71,7 +71,7 @@
         <div class="col-md-12 order-md-1">
           <div class="row">
             <div class="col-sm-4 mb-4">
-              <label for="address">模块数量</label>
+              <label for="module_amount">模块数量</label>
               <input type="text" class="form-control required" id="module_amount" name="module_amount" placeholder="" v-model="module_amount" required="">
               <div class="invalid-feedback">
                 Valid number is required.
@@ -80,7 +80,7 @@
 
 
             <div class="col-sm-4 mb-4">
-              <label for="mask">模块长度(U位数)</label>
+              <label for="u_count">模块长度(U位数)</label>
               <input type="text" class="form-control required" id="u_count" name="u_count"  v-model="u_count" required="">
               <div class="invalid-feedback">
                 Valid number is required.
@@ -88,7 +88,7 @@
             </div>
 
             <div class="col-sm-4 mb-4">
-              <label for="netgate">温湿度个数</label>
+              <label for="temp_amount">温湿度个数</label>
               <input type="text" class="form-control required" id="temp_amount" name="temp_amount" v-model="temp_amount" required="">
               <div class="invalid-feedback">
                 Valid number is required.
@@ -97,11 +97,51 @@
 
           </div>
           <button v-on:click="setHardwareConfig" class="btn btn-primary btn-lg btn-block">更新硬件设置</button>
-          <!-- </form> -->
+         <!-- </form> -->
         </div>
       </div>
 
 
+      <div class="py-5 text-center">
+        <h2>上位机设置</h2>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 order-md-1">
+          <div class="row">
+
+
+            <div class="col-sm-4 mb-4">
+              <label for="host">上位机地址(ip:port)</label>
+              <input type="text" class="form-control required" id="host" name="host" placeholder="" v-model="host" required="">
+              <div class="invalid-feedback">
+                valid ip:port is needed.
+              </div>
+            </div>
+
+            
+            <div class="col-sm-4 mb-4">
+              <label for="status">接收U位数据的api</label>
+              <input type="text" class="form-control required" id="status" name="status" placeholder="/status" v-model="status" required="">
+              <div class="invalid-feedback">
+                Valid api is needed.
+              </div>
+            </div>
+
+            
+            <div class="col-sm-4 mb-4">
+              <label for="temp">接收温湿度数据url</label>
+              <input type="text" class="form-control required" id="temp" name="temp" placeholder="/temp" v-model="temp" required="">
+              <div class="invalid-feedback">
+                Valid api is needed.
+              </div>
+            </div>
+
+          </div>
+          <button v-on:click="setUpstreamConfig" class="btn btn-primary btn-lg btn-block">更新上位机设置</button>
+         <!-- </form> -->
+        </div>
+      </div>
 
 
 
@@ -110,6 +150,5 @@
 {% end %}
 
 {% block extraJS %}
-<!-- <script src="/static/js/info_handling.js" type="text/javascript" defer></script> -->
 <script src="/static/js/vue_settings.js" type="text/javascript"></script>
 {% end %}

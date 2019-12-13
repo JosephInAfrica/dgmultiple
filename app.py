@@ -31,23 +31,26 @@ class FeedThread(Thread):
         Thread.__init__(self, name="feedThread")
 
     def run(self):
-        dataFeeder.run()
-        IOLoop.current().start()
+        # ioloop=IOLoop.current()
+        ioloop = IOLoop()
+        # dataFeeder.run()
+        ioloop.run_sync(dataFeeder.run)
+
+        # ioloop.start()
 
 
 class HeartBeater(Thread):
-
     def __init__(self):
         Thread.__init__(self, name="heartBeatThread")
 
     def run(self):
         ioloop = IOLoop()
-        dataFeeder.heart_beat()
-        ioloop.start()
+        ioloop.run_sync(dataFeeder.heart_beat)
+        # ioloop.start
 
 
 if __name__ == '__main__':
     WebThread().start()
-    if setting.upload:
-        HeartBeater().start()
+    # if setting.upload:
     FeedThread().start()
+    HeartBeater().start()

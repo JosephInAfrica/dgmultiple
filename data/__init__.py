@@ -5,7 +5,7 @@ from setting import setting
 import os
 import json
 import urllib2
-from setting import setting
+from setting import setting,get_mac
 from loggers import elogger, rlogger, rlog, elog
 from tornado.gen import coroutine
 import os
@@ -42,9 +42,9 @@ class DataCenter(dict):
     def __init__(self):
         print("尝试初始化数据中心")
         recover_light(self)
-        recover_host(self)
         recover_blink(self)
         self.network = get_network_config()
+        self.mac=get_mac(setting.mac_dir)
         print("network", self.network)
 
     def parse_blink_freq(self, data):
@@ -156,16 +156,16 @@ class DataCenter(dict):
         self.save_light()
         self.save_blink()
 
-    def save_host(self):
-        with open(setting.backup_host, "w") as file:
-            print("hosts to save in file===>")
-            print(json.dumps(self.host))
-            file.write(json.dumps(self.host))
-            try:
-                os.system("sync")
-                print("hosts to notify saved==>", self.host)
-            except:
-                pass
+    # def save_host(self):
+    #     with open(setting.backup_host, "w") as file:
+    #         print("hosts to save in file===>")
+    #         print(json.dumps(self.host))
+    #         file.write(json.dumps(self.host))
+    #         try:
+    #             os.system("sync")
+    #             print("hosts to notify saved==>", self.host)
+    #         except:
+    #             pass
 
     def save_blink(self):
         with open(setting.backup_blink, "w") as file:

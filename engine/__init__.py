@@ -17,12 +17,9 @@ from codes.status_light import purge_old
 from cache_temp import update_temp
 from utils.bytes import map_long 
 
-codes = [Codes(i) for i in range(1, setting.module_amount + 1)]
-# 由设置模块数量来生成将要生成codes.
-def codes_online():
-    return [code.codes for code in codes if code.addr in dataCenter.online_address]
-def codes_offline():
-    return [code.codes for code in codes if not code.addr in dataCenter.online_address]
+def codes():
+    return [Codes(i) for i in range(1, setting.module_amount + 1)]
+# 写成这样是为了实时读取module_amount.
 
 interval = 0.5
 
@@ -39,11 +36,17 @@ class DataFeeder(object):
     def to_start_up(self):
         self._ser = serial.Serial('/dev/ttymxc3', 9600,timeout=3)
         print("init temp modules.")
-        print(setting.__dict__)
         try:
             dataCenter.vanila_status, dataCenter.vanila_temp,_, _ = yield self.stroke()
+            print("trying upload status and temp!!")
             yield self.upload_status()
             yield self.upload_temp()
+            # yield
+            # IOLoop.current().spawn_callback(self.upload_status)
+            # IOLoop.current().spawn_callback(self.upload_temp)
+            # self.upload_status()
+            # self.upload_temp()
+            print("mission sent")
             self.run_command(dataCenter.online_light_commands)
             print("feed initiliazed")
         except Exception as e:
@@ -59,20 +62,33 @@ class DataFeeder(object):
     def upload_status(self):
         if not setting.upload:
             return
-        yield upload(dataCenter.host,setting.url_status,dataCenter.status_to_upload)
+        # rlog("uploading status!!!")
+        yield upload(setting.upstream_host,setting.url_status,dataCenter.status_to_upload)
 
     @gen.coroutine
     def upload_temp(self):
         if not setting.upload:
             return
-        yield upload(dataCenter.host,setting.url_temp,dataCenter.temp_to_upload)
+        # rlog("uploading temp!!!")
+        yield upload(setting.upstream_host,setting.url_temp,dataCenter.temp_to_upload)
 
     @gen.coroutine
     def heart_beat(self):
         while 1:
+            # print("heartbeat!!!")
+            # print("heartbeat interval",setting.heartbeat_interval)
+            beat = {"heartBeat": setting.self_ip}
+            up=upload(setting.upstream_host,setting.url_heartbeat,beat)
             yield gen.sleep(setting.heartbeat_interval)
-            beat = {"heartBeat": dataCenter.network.get("address")}
-            results = yield upload(dataCenter.host,setting.url_heartbeat,beat)
+            results=yield up
+
+
+    # @gen.coroutine
+    # def heart_beat(self):
+    #     while 1:
+    #         yield gen.sleep(setting.heartbeat_interval)
+    #         beat = {"heartBeat": dataCenter.network.get("address")}
+    #         results = yield upload(setting.upstream_host,setting.url_heartbeat,beat)
 
 
     def _runCommand(self):
@@ -98,7 +114,7 @@ class DataFeeder(object):
             feedback = write_enquiry(self._ser, i.code,setting.write_delay)
             if not feedback==i.code:
                 rlog("feedback<%s>||code<%s>.SeeUAgain"%(map_long(feedback),i))
-                # rlog("added <%s> to list.will do it again."%i)
+                rlog("added <%s> to list.will do it again."%i)
                 # self.run_command([i])
                 self.commandList.append(i)
             else:
@@ -124,7 +140,7 @@ class DataFeeder(object):
         temp_updated = 0
         invalid_addr = []
 
-        for code in [code.codes for code in codes]:
+        for code in [code.codes for code in codes()]:
             try:
                 result = check_module(self._ser, code)
             except Exception as e:
@@ -159,7 +175,7 @@ class DataFeeder(object):
                 dataCenter.vanila_status[module_id].pop("temp_hum")
             except Exception as e:
                 elogger.exception(e)
-        plog("%s"%status_modules)
+        # plog("%s"%status_modules)
         raise gen.Return((status_modules,temp_modules, updated, temp_updated))
 
 
@@ -185,14 +201,20 @@ class DataFeeder(object):
                 print("going_off",going_off)
 
             if updated:
+                # IOLoop.current().spawn_callback(self.upload_status)
                 yield self.upload_status()
 
             if going_off:
                 rlog("Module Gone OffShelf:==>%s"%going_off)
                 yield self.upload_status()
+                # IOLoop.current().spawn_callback(self.upload_status)
+                # self.upload_status()
 
             if temp_updated:
+                # IOLoop.current().spawn_callback(self.upload_temp)
                 yield self.upload_temp()
+                # self.upload_temp()
+
 
             if re_onshelf:
                 rlog("Module reonshelf:==>%s"%re_onshelf)
