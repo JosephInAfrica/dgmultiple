@@ -114,7 +114,7 @@ class DataFeeder(object):
             feedback = write_enquiry(self._ser, i.code,setting.write_delay)
             if not feedback==i.code:
                 rlog("feedback<%s>||code<%s>.SeeUAgain"%(map_long(feedback),i))
-                rlog("added <%s> to list.will do it again."%i)
+                # rlog("added <%s> to list.will do it again."%i)
                 # self.run_command([i])
                 self.commandList.append(i)
             else:
