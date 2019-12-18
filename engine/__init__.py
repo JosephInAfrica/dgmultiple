@@ -41,11 +41,7 @@ class DataFeeder(object):
             print("trying upload status and temp!!")
             yield self.upload_status()
             yield self.upload_temp()
-            # yield
-            # IOLoop.current().spawn_callback(self.upload_status)
-            # IOLoop.current().spawn_callback(self.upload_temp)
-            # self.upload_status()
-            # self.upload_temp()
+
             print("mission sent")
             self.run_command(dataCenter.online_light_commands)
             print("feed initiliazed")
@@ -114,9 +110,7 @@ class DataFeeder(object):
             feedback = write_enquiry(self._ser, i.code,setting.write_delay)
             if not feedback==i.code:
                 rlog("feedback<%s>||code<%s>.SeeUAgain"%(map_long(feedback),i))
-                # rlog("added <%s> to list.will do it again."%i)
-                # self.run_command([i])
-                self.commandList.append(i)
+                # self.commandList.append(i)
             else:
                 dataCenter.update_light(i)
         dataCenter.save_light()
@@ -196,7 +190,7 @@ class DataFeeder(object):
             re_onshelf = watched.get("re_onshelf")
 
             going_off=watched.get("going_off")
-       
+
             if going_off:
                 print("going_off",going_off)
 

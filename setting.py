@@ -40,9 +40,15 @@ def get_network_config():
 
 
 def get_mac(dir):
+    if not os.path.isdir(dir):
+        os.system("ifconfig eth1 > /tmp/mac.txt")
+
+    
     with open(dir,"r") as file:
         para=file.read()
-    
+    # except IOError:
+
+        
     e=re.compile(r"HWaddr\s+([0-9a-f:]+)")
     c=re.findall(e,para)[0]
     c=c.replace(":","")
@@ -63,11 +69,11 @@ class Setting(object):
     ip_config=ip_config
 
     # for_tencnet值0,1分别代表模块和标签的id按腾讯的要求加工/采用原始数据。
-    for_tencent=0
-    upload = 1
+    for_tencent=1
+    upload = 0
     allow_temp_failure =5
     allow_enquiry_fail=3
-    allow_write_enquiry_fail=2
+    allow_write_enquiry_fail=3
 
     write_bunch=10
     write_delay=0

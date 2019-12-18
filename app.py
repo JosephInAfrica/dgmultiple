@@ -51,6 +51,6 @@ class HeartBeater(Thread):
 
 if __name__ == '__main__':
     WebThread().start()
-    # if setting.upload:
+    if setting.upload:
+        HeartBeater().start()
     FeedThread().start()
-    HeartBeater().start()

@@ -34,7 +34,8 @@ def set_network_config(kwargs):
     with open(setting.ip_config, 'w') as file:
         file.write(to_write)
 
-    set_config("network")
+    set_config("network",kwargs)
+    os.system("/home/root/ip.sh")
 
 
 def get_config(column):
@@ -44,10 +45,15 @@ def get_hardware_config():
     return get_config("hardware")
 
 def get_upstream_config():
-    return get_config("upstream")
+    try:
+        result=get_config("upstream")
+        return result
+    except:
+        return {}
+    # return get_config("upstream")
 
 def get_network_config():
-    return get_config("network")
+    return setting.network
 
 def set_config(column,dic):
     for key,value in dic.items():

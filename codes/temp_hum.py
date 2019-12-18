@@ -13,7 +13,7 @@ class Code(object):
         self.address=address
         self.amount=amount
 
-    @property    
+    @property
     def code(self):
         if self.amount==0:
             result="%s0600080000"%ord_to_hex(self.address)

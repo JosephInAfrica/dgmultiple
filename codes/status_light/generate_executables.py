@@ -22,6 +22,13 @@ class Code(object):
         self.status=status
         self.raw_status=raw_status
         self.address=raw_status.get(module_id).get("address")
+        self.repeat=0
+
+    
+    def add_one(self):
+        # add self's repeat time.
+        self.repeat+=1
+        return self
 
     @property
     def code(self):
@@ -29,7 +36,7 @@ class Code(object):
 
     @property
     def module_index(self):
-        return "%s%s"%(self.module_id,self.index)
+        return "%s%s"%(self.module_id,self.index)   
 
     def __repr__(self):
         return "<LightColor>module:%s address:%s index:%s status:%s"%(self.module_id,self.address,self.index,self.status)

@@ -75,15 +75,15 @@ def write_enquiry(ser, code,interval):
     if not verify(recv):
         print('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
             hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
-        # write_enquiry_again(ser,code,interval,count=2)
+        return write_enquiry_again(ser,code,interval,count=2)
     return recv
         
 
 def write_enquiry_again(ser, code, interval,count):
-    if time>setting.allow_write_enquiry_fail:
-        rlog('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
-            hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
-        return
+    if count>setting.allow_write_enquiry_fail:
+        rlog('tryied[%s] %s time but faild.No more try' % (' '.join([map_output_hex(
+            hex(ord(i))) for i in code]), count-1))
+        return code
 
     time.sleep(interval)
     # ser.reset_input_buffer()
@@ -96,24 +96,24 @@ def write_enquiry_again(ser, code, interval,count):
     if not verify(recv):
         print('response <%s> for enquriy <%s> not crc16 verifed' % (' '.join([map_output_hex(
             hex(ord(i))) for i in recv]), ' '.join([map_output_hex(hex(ord(i))) for i in code])))
-        write_enquiry_again(ser,code,interval,count+1)
+        return write_enquiry_again(ser,code,interval,count+1)
     return recv
         
 
-    time.sleep(interval)
-    ser.reset_input_buffer()
-    ser.reset_output_buffer()
-    ser.write(code)
-    count = ser.inWaiting()
-    if count > 0:
-        recv = ser.read(count)
-        if not verify(recv):
-            print('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
-        return recv
-    else:
-        print("enquriy for <%s> has no reply(0 length)" %
-                        map_long(code))
-        return ""
+    # time.sleep(interval)
+    # ser.reset_input_buffer()
+    # ser.reset_output_buffer()
+    # ser.write(code)
+    # count = ser.inWaiting()
+    # if count > 0:
+    #     recv = ser.read(count)
+    #     if not verify(recv):
+    #         print('response <%s> for enquriy <%s> not crc16 verifed' % (map_long(recv), map_long(code)))
+    #     return recv
+    # else:
+    #     print("enquriy for <%s> has no reply(0 length)" %
+    #                     map_long(code))
+    #     return ""
 
 
 

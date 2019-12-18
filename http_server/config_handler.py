@@ -50,7 +50,7 @@ class NetworkConfig(BaseHandler):
         set_network_config(dict(data))
         defer_reboot(3)
         self.write(json.dumps(
-            {'status': 'ok', 'alert': "即将重启设备。请到新的ip登录。"}))
+            {'status': 'ok', 'alert': "设置生效。即将重启。"}))
 
         self.finish()
 
@@ -70,7 +70,7 @@ class HardwareConfig(BaseHandler):
         set_hardware_config(dict(data))
         # defer_reboot(3)
         self.write(json.dumps(
-            {'status': 'ok', 'alert': "设置成功。即将重启设备。"}))
+            {'status': 'ok', 'alert': "设置成功。"}))
 
         self.finish()
 
@@ -90,7 +90,7 @@ class UpstreamConfig(BaseHandler):
         set_upstream_config(dict(data))
         # defer_reboot(3)
         self.write(json.dumps(
-            {'status': 'ok', 'alert': "设置成功。即将重启设备。"}))
+            {'status': 'ok', 'alert': "设置成功。"}))
 
         self.finish()
 
