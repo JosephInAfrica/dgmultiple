@@ -1,15 +1,16 @@
+Letter of Recommendation for Li Jiajun's Graduate Program Application
 
 To whom it may concerns,
 
 I am pleased to recommend Li Jiajun for admission to a computer science graduate program.
 
-I work at Tencent as a Senior Security Engineer and dev leader. I met Li JiaJun when I was working as a development leader for Host-based Intrusion Detection System (HIDS) at OPPO three years ago. I was his tutor and team leader for about two years (2020-2021) during which I had the opportunity to observe his daily work and review all of his code merge requests. 
+I work at Tencent as a Senior Security Engineer and dev leader. I work with Li JiaJun when I served as a development leader for the Host-based Intrusion Detection System (HIDS) at OPPO three years ago. I was his tutor and team leader for about two years (2020-2021), allowing me to observe his daily work and review all of his code merge requests. 
 
-He likes exploring new knowledge and diving deep into real world problems we meet in projects. Our team' work is mainly about Host Security and Network Security, and majority of his work is backend system to  and he majored in backend part.He is a quick learner, I am impressed that he soon gains considerable familiarity with all the middlewares we use in backend system, and gadgets we use in monitor debug CICD. He got familiar with project quickly.
+Li Jiajun has a passion for exploring new knowledge and delving deep into real world problems we meet in projects. His mainly focus is in the backend system that supports all detection and monitoring features of the Security System. He is a quick learner, I am impressed that he attained good understanding of the entire project in a short period.Quite soon he gained familiarity with all the middlewares and gadgets we use use in monitoring and Continuous Integration/Continuous Deployment (CICD). As the program advanced, his knowledge in operating systems allowed him to understand the intricacies of detecting features, which were not strictly required of him but greatly facilitated teamwork and cooperation.
 
-He willingly takes on complicated tasks. When he was in charge of the backend part of HIDS, he boldly restructured code, making it cleaner and more understandable.  It is not a requisite to restructure legacy codes before implementing new features, and that requires quite intensive understanding of the whole project. He did quite drastic restructure not long after he was in charge, got rid of legacy codes, and added test cases to proof its safety. 
+He willingly takes on complicated tasks. When he was in charge of the backend part of HIDS, he boldly restructured code, making it cleaner and more understandable.  It is not a requisite to restructure legacy codes before introducing new features, and that requires comprehensive understanding of the entire project. He reorganized existing features to incoperate new ones smoothly, got rid of large chunks of legacy codes,and added test cases to ensure safety.
 
-He has impressive programming skills in Go Programming Language. I personally like his code style. He wrote concise,  well-structured and well-tested codes, address to problem directly. His codes are quite pleasant  to review. He read code of well-known open-source projects a lot.
+Li Jiajun has impressive programming skills in Go Programming Language. I personally like his code style. He wrote concise, well-structured and well-tested codes, address to problem directly. His codes are quite pleasant to review. Despite his primary responsibility in the backend service, he has quite decent front-end skills as well.
 
 Besides, his is quite enthusiastic and easy-going in personality. He likes sports, and has been my gym partner when we were working together.  We had great time working out together during lunch breaks. 
 
@@ -19,4 +20,7 @@ Thank you for considering my recommendation.
 
 Sincerely,
 
-Yang Nan
+Nan Yang
+[[title]]
+Tencent Coop
+Nanshan district, Shenzhen,China.
