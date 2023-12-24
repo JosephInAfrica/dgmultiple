@@ -1,43 +1,22 @@
-This is kitty Chan, I work in Digitalor Company,a shenzhen based company working on monitoring hardwares and environment in 
 
-I work project manager and his team leader. We were tight member and He is the one address my question and gave solutions directly. 
+Kitty Chan
+Program Manager
+Digitar China
+Email: [[kitty.chan@digitalr.com]]
+tel: xxx
 
-We happend to be co-workers for about 1 year. 2019-2010.
+Dear admission Committee,
 
-He gave realistic and carry on solutions steady and fast. How to express 
+It is great pleasure to recommend my ex-colleague Li Jiajun to your esteemed program.
 
-1. trade fair. he quickly nailed the demonstration software we were preparing in about 2 weeks. 
-When he just joined the company. We were preparing a trade fair in New York to attend. We were striving to exhibit the newly crafted pre-model of a sensor. Yet the software to control was not ready, old ones won't do because of new communication protocals. He managed to crack the protocal and built a demontration software within 2 weeks. It was quite pleasing.  We were planning to exhibit our new model of sensor. There was a view trade We expect our new version of
+-- who I am. how do I know him. 
 
-2. He decided to made a middleware into 
-He creative 
-Anecdote
-
-Its enjoyable to work with him.
-
-I accept Li Jiajun is my coo-worker. 
-
-What does my work has to do with his. I work his often 
-
-I give high recommendation on his creativity on problem solving. and efficiency in carry projects out. 
-
-There is a four 
-
-I should not ask someone to lie for me. I should not make him feel
-
--  middleware connecting sensors and managing states,and offer apis for upper structure? use go instead of python for purpose.  It made it easier for development managing structures.
-
--  
-
-- 
+This is kitty Chan.I work in Digitalor Ltd,a shenzhen based technology company working on tracing and protection solutions for IT assets. I had chance to work with Li Jiajun as a team during 2009-2010, when I was project manager and team leader, and him working as backend programmer. He impressed me with his enthusiasm and reliability . I really enjoyed working with him and would like to give him strong recommendation for his application.
 
 
+He has good sense  He has good trade fair. he quickly nailed the demonstration software we were preparing in about 2 weeks. 
+When he just joined the company. We were preparing a trade fair in New York to attend. We were striving to exhibit the newly developed pre-model of a sensor. Yet the software to control was not ready, old ones won't do because of new communication protocals. He managed to crack the protocal and built a demontration software within 2 weeks, with python and Vue framework. It was quite pleasing. It was simple and elegant, and works just fine. 
 
+2. I give high recommendation on his creativity on problem solving. and efficiency in carry projects out. He is responsive and reliable. He gave practical advices and carry them out with quality. 
 
-
-
-
-
-
-
-- 
+3.  middleware connecting sensors and managing states,and offer apis for upper structure? use go instead of python for purpose.  It made it easier for development managing structures.

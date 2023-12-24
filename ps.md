@@ -2,11 +2,13 @@
 
 Why do I want to attend graduate school to delve further into computer science?
 
+
 I am aiming to attend Texas A&M University's Computer Science graduate program, with an emphasis on AI.
 
 I taught myself how to code and have been working as a programmer for 5 years. I have experience with several programming languages, frameworks, and tools, mostly for internet backend services. However, I want to strengthen my foundations in computer science and mathematics. As an experienced programmer, I am interested in exploring classic computer science concepts and expanding my career paths for the future.
 
-AI has the potential to boost productivity and be a game changer. ChatGPT has impressed the world with its capabilities.
+AI has the potential to boost productivity and be a game changer. ChatGPT and its alikes has impressed the world with its capabilities. Internet service which servers as basic infrastructure will continue to play its important part in the technology world. Thats where my major interests relies on. Controlling complexity 
+
 
 When I was in middle school, I attended a summer camp about Visual Basic Programming and was among the only 3 students who passed the National Computer Rank Examination Level 2 in the following test. That was when I first met with Variables, loops, and conditions: fumbling around with UI editor gave me good feelings of control.
 
@@ -16,13 +18,10 @@ During my first job working in Nigeria as a logistics manager(2014-2016), I pick
 
 After 2 years working in Africa, I returned to China, and With my experience in logistics, I got enrolled in China Progress Ltd,  a transportation company based in Shenzhen,  as a marketer. Here I made use of Python and Scrappy, a scrawler framework to collect potential customer info. Coding did not help a lot in marketing but I was highly appreciated for providing my co-workers with potential customer info, which they would otherwise endeavor to collect manually. 
 
-In early 2019, I was offered a job as a Python programmer at Digitalor, a Shenzhen-based company that specializes in producing server cabinet receptors. This was my first job as a programmer, and it proved to be a truly memorable experience. I was thrilled to be part of a team that creates cutting-edge technology that helps to locate servers in server cabinets.
+In early 2019, I was offered a job as a Python programmer at Digitalor, a Shenzhen-based company that specializes in producing server cabinet sonsors. This was my first job as a programmer, and it proved to be a truly memorable experience. I was thrilled to be part of a team that creates cutting-edge technology that helps to locate servers in server cabinets.
 
-My work involved developing and maintaining Python code that would be used to build receptors. I had to learn a lot about the industry's standards and practices to ensure that the code I wrote was up to par. I spent a lot of time working on the backend service for the receptor system, which involved creating a middleware that connects the receptors and provides interfaces to control each of them.
 
-One of my most significant contributions was building a web service that displayed cabinet addresses for demonstrating purposes. This was completed just in time for the debut of the new version of the receptor at a trade fair in New York. My boss, Mr. James Liu, was highly appreciative of my work, and I was the only programmer who wrote in Go, which was a relatively new language at the time.
-
-I have to admit that I enjoyed the engineering atmosphere at Digitalor. It was exciting to work in an environment where the focus was on creating innovative solutions to complex problems. I was also fascinated by the potential of the Go programming language, and I suggested building the backend service for receptors using Go, which enjoys a good reputation for supporting async communication cost-effectively.
+I enjoyed the engineering atmosphere at Digitalor. It was exciting to work in an environment where the focus was on creating innovative solutions to complex problems. I was also fascinated by the potential of the Go programming language, and I suggested building the backend service for receptors using Go, which enjoys a good reputation for supporting async communication cost-effectively.
 
 Overall, my time at Digitalor helped me to develop my skills as a programmer, and it gave me a deeper appreciation for the importance of creating efficient, reliable, and scalable software. I am grateful for the experience and look forward to applying what I learned to future projects.
 
@@ -34,14 +33,35 @@ While working in OPPO, I came across large-scale and distributed services, and I
 
 I owe a lot to the famous book Structure and interpretation of computer programs(SICP), which helped me build intrinsic on how to keep codes well structured. This inspires me to resort to classics and fundamentals to  : that contribute to my motivation to resort to the classic text books and build foundations.  
 
-> At that time preparing for debut of New Version receptor at a trade fair in New York and time is drawing close. I managed to build a web service that display cabinet address for demonstrating, which is on time for the trade fair.
-> 
+At that time preparing for debut of New Version receptor at a trade fair in New York and time is drawing close. I managed to build a web service that display cabinet address for demonstrating, which is on time for the trade fair.
+ 
 
-> Go Programming Language gained quite some popularity in China around 2019. I was obsessed with its efficiency and simple design. I suggested building the backend service for receptors in Go for performance since Go enjoys a good reputation in supporting async communication cost-effect
-> 
+Go Programming Language gained quite some popularity in China around 2019. I was obsessed with its efficiency and simple design. I suggested building the backend service for receptors in Go for performance since Go enjoys a good reputation in supporting async communication cost-effect
+
 
 While working in OPPO, I came across large-scale and distributed services, and I encountered different problems with backend service: monitor, performance metric, log, transport, cache, message delivery, and cron [tasks.](http://tasks.It) For me Complexity control  is core in engineering.  
 
 I owe a lot to the famous book Structure and interpretation of computer programs(SICP), which helped me build intrinsic on how to keep codes well structured. This inspires me to resort to classics and fundamentals to  : that contribute to my motivation to resort to the classic text books and build foundations.  
+ 
 
-[revised by chatGPT](https://www.notion.so/revised-by-chatGPT-0f8110c2b65c4240894686e8a63413b4?pvs=21)
+
+----
+- introduction
+
+
+
+- summerize what you did as an undergraduate
+
+I guess it is less important than what I did as an programmer.
+
+
+- indicate what you have being doing while working
+
+
+
+- what you want to study in graduate school in greater detail
+
+
+
+- conclusion.
+
