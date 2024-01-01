@@ -13,16 +13,15 @@
 
 ***Digitalor Technology Company Ltd.**, Shenzhen, China – (Mar 2019 - Oct 2020)*
 
-- built embedded Programs running on the company's controller products using Python and Go
-- designed and implemented backend service managing state and tasks of sensors, which makes developing service much easier .
+- built embedded Programs running on the company's controller products using Python and Go. 
+- designed and implemented backend service managing state and tasks of sensors. 
  
 ***China Progress Freight Forwarding Com. Ltd.** ,Shenzhen,China - (March 2017--Feb 2019)*
-
 - maintained web crawler system
 - developed and maintained internal logistics inquiry service
 
 ***Bedmate Furniture International**, Lagos, Nigeria – (Mar 2019 - Oct 2020)*
-- administered importing, and customs clearance affairs
+- administered importing, and customs clearance affairs. 
 
 
 ### Education:
