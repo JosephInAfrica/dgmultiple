@@ -2,10 +2,6 @@
 
 ### JiaJun Li  [lochlee@yahoo.com](mailto:lochlee@yahoo.com)
 
-### Education:
-
-### 2009-2013 Qingdao University, Major in Chemistry, Bachelor degree
-
 ### *Backend Developer*
 
 ***Oppo Mobile Telecommunications Corp.**, Shenzhen, China – (Oct 2020 - Present)*
@@ -14,11 +10,12 @@
 - contributed design and implementation of backend service of **host-based intrusion detection system** (HIDS), which is protecting 100k servers in real-time internally. 
 - responsible for the company's **Security Operations Center** **(SOC)**,migrated it from Java to Go and continuously adding features to it.
 
+
 ***Digitalor Technology Company Ltd.**, Shenzhen, China – (Mar 2019 - Oct 2020)*
 
 - built embedded Programs running on the company's controller products using Python and Go
 - designed and implemented backend service managing state and tasks of sensors, which makes developing service much easier .
-
+ 
 ***China Progress Freight Forwarding Com. Ltd.** ,Shenzhen,China - (March 2017--Feb 2019)*
 
 - maintained web crawler system
@@ -28,6 +25,9 @@
 - administered importing, and customs clearance affairs
 
 
+### Education:
+
+### 2009-2013 Qingdao University, Major in Chemistry, Bachelor degree
 
 Core courses: Calculus, Linear Algebra, **Probability theory**, Language C
 
@@ -36,4 +36,3 @@ Core courses: Calculus, Linear Algebra, **Probability theory**, Language C
 - **Programming Language**: Go, Python,Javascript, Rust
 - **Frontend Frameworks**: Vue.js
 - **Database**: MySQL,MongoDB,Redis, Kafka
-

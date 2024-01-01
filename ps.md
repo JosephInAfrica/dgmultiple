@@ -5,7 +5,7 @@ Why do I want to attend graduate school to delve further into computer science?
 
 I am aiming to attend Texas A&M University's Computer Science graduate program, with an emphasis on AI.
 
-I taught myself how to code and have been working as a programmer for 5 years. I have experience with several programming languages, frameworks, and tools, mostly for internet backend services. However, I want to strengthen my foundations in computer science and mathematics. As an experienced programmer, I am interested in exploring classic computer science concepts and expanding my career paths for the future.
+I taught myself how to code and have been working as a programmer for 5 years. I have experience with several programming languages, frameworks, and tools, mostly for internet backend services. However, I want to strengthen my foundations in computer science and mathematics. I have found charm in realistic  As an experienced programmer, I am interested in exploring classic computer science concepts and expanding my career paths for the future.
 
 AI has the potential to boost productivity and be a game changer. ChatGPT and its alikes has impressed the world with its capabilities. Internet service which servers as basic infrastructure will continue to play its important part in the technology world. Thats where my major interests relies on. Controlling complexity 
 
