@@ -7,12 +7,14 @@ tel: xxx
 
 Dear admission Committee,
 
+I am writing to recommend Li Jiajun for admission to your esteemed institution. I had the pleasure of working with Li Jiajun at Digitalor Ltd, a Shenzhen-based technology company that specializes in tracing and protection solutions for IT assets. During his tenure as a backend programmer from 2009-2010, I was his project manager and team leader.
 
-This is kitty Chan.I work in Digitalor Ltd,a shenzhen based technology company working on tracing and protection solutions for IT assets. I worked with Li Jiajun during 2009-2010, when I was project manager and team leader, and him a backend programmer. He impressed me with his enthusiasm and reliability. I really enjoyed working with him and would like to give him strong recommendation for his application.
+Li Jiajun is an enthusiastic and reliable individual who impressed me with his efficiency and ability to work under pressure. I recall a time when we were preparing to demonstrate a newly developed sensor product at a trade fair. A demonstration software was required to be ready as soon as possible to make it available for demonstration. This was quite a challenge since a new communication protocol was applied. Li Jiajun managed to finish the demo within two weeks. It was simple, elegant, and worked flawlessly throughout the fair event. I really appreciate his ability to work under pressure and deliver without compromising on quality.
 
-I admire his efficiency in work very much. There was a time when we strive to demonstrate a newly developed sensor product on the trade fair we were about to attend. And a demonstration software should be ready asap to make it available for demonstration. It was quite a challenge since new communication protocal is applied. He managed to finish the demo within 2 weeks. It was simple and elegant, and works just fine all through the fair event.I really appreciate his ability of working under pressure and delivering with no compromise in quality.
+Li Jiajun’s growth in skills also impressed me a lot. He learned Go programming language by himself and found good use of it in his work. I can see his curiosity in tech trends, and I really appreciate his passion for always learning.
 
-His growth in skills also impressed me a lot. He picked up go programming language and found good use of it in his work. I also give high recommendation on his creativity on problem solving. There are times we need to answer for personalized demands by individual customer, His tried to answer 
-He gave practical advices and carry them out with quality. 
+I also give high recommendation on his creativity in problem-solving. There are times when we need to answer personalized demands by individual customers. Li Jiajun would try to find generalized solutions and integrate them into our product. He has a down-to-earth personality and is practical in problem-solving. He gives practical advice and carries them out with quality.
 
-I am sure he will be a good candidate for your program.
+I hope this letter provides you with the information you need to make an informed decision. Please do not hesitate to contact me if you require any further information.
+
+Sincerely, Kitty Chan
