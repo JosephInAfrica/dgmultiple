@@ -6,7 +6,7 @@
 
 ***Oppo Mobile Telecommunications Corp.**, Shenzhen, China – (Oct 2020 - Present)*
 
-- contributed to the design and implementation of the backend part of **host-based intrusion detection system** (HIDS), which is protecting 100k physical servers in real-time. continuously maintained and enhanced its functionality with new features. 
+- contributed to the design and implementation of the backend part of **host-based intrusion detection system** (HIDS), which is protecting 100k physical servers in real-time. continuously maintained and enhanced its functionality with new features.
 - responsible for backend service of the company's **Security Operations Center** **(SOC)**. migrated it from Java to Go and continuously adding features to it.
 - solely developed backend service of company's shielding platform that provides shiedling service for Android apps against reverse engineering. Integrated this service into the internal CI/CD system, which is currently used as infrastructure.
 
@@ -14,7 +14,7 @@
 
 ***Digitalor Technology Company Ltd.**, Shenzhen, China – (Mar 2019 - Sep 2020)*
 
-- designed and implemented a middleware service for managing software of company's sensor products. 
+- designed and implemented middleware services for managing software of company's sensor products. 
 - built communication part implementing communication protocals of sensor products running on the company's controller products using Python and Go of sensor and backend service
 
  

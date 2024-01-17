@@ -2,18 +2,19 @@
 
 Why do I want to attend graduate school to delve further into computer science?
 
-I am aiming to attend Texas A&M University's Computer Science graduate program, with an emphasis on Systems and Software engineering.
+I am aiming to attend Texas A&M University's Computer Science graduate program, with an emphasis on AI and Operating System.
 
-I taught myself how to code and have been working as a programmer for 5 years. I have experience with several programming languages, frameworks, and tools, mostly for internet backend services. However, I want to strengthen my foundations in computer science and mathematics. I have found charm in realistic  As an experienced programmer, I am interested in exploring classic computer science concepts and expanding my career paths for the future.
+
+I taught myself how to code and have been working as a backend programmer for 5 years. I have experience with several programming languages, frameworks, and tools,projects in diffrent complexity. Two major motives drove me to apply With my experience grows, I found my I have strong desire to enhance my baisc knowledge in Computer Science, which I struggled to make up by self-learning   However, I want to strengthen my foundations in computer science. I have found charm in realistic As an experienced programmer, I am interested in exploring classic computer science concepts and expanding my career paths for the future.
 
 AI has the potential to boost productivity and be a game changer. ChatGPT and its alikes has impressed the world with its capabilities. Internet service which servers as basic infrastructure will continue to play its important part in the technology world. Thats where my major interests relies on. Controlling complexity 
 
 
-When I was in middle school, I attended a summer camp about Visual Basic Programming and was among the only 3 students who passed the National Computer Rank Examination Level 2 in the following test. That was when I first met with Variables, loops, and conditions: fumbling around with UI editor gave me good feelings of control.
+My experience with prgramming begins When I was in middle school.I attended a summer camp about Visual Basic Language and passed following the National Computer Rank Examination Level 2. Fumbling around with UI editor and control gadgets with switches,conditions and loops gave me good feelings of control. 
 
-I attended Qingdao University as a chemistry major student. Chemistry major gave me boost in scientific research. I didn’t regret choosing chemistry.
+I attended Qingdao University major in Chemistry.I got good training in scientific research and I never regret choosing chemistry.  
 
-During my first job working in Nigeria as a logistics manager(2014-2016), I picked up web programming technics, from HTML and CSS to MySQL, Python, and Flask frame during my leisure time. All this technology stack was a little bewildering and overwhelming to me at that time, and later I found out that might not be a good route for learning to Program by oneself. But I tried to grasp what I can while keeping in mind that I should make up for basic computer knowledge later.  It boosted my confidence and built my skills stack for my first Programming job.
+My adventurous and romantic nature drove me to accpet the job as a logistics manager(2014-2016) in Nigeria for a furniture company as my first job. I picked up a popular self-learning-prgram route from Internet: building web service with Python and a framework called Flask, with some frontend knowledge as well as mysql. All this technology stack was a little bewildering and overwhelming to me at that time,  however I tried to grasp what I can while keeping in mind that I should make up for basic computer knowledge later.  It boosted my confidence and built my skills stack for my first Programming job.
 
 After 2 years working in Africa, I returned to China, and With my experience in logistics, I got enrolled in China Progress Ltd,  a transportation company based in Shenzhen,  as a marketer. Here I made use of Python and Scrappy, a scrawler framework to collect potential customer info. Coding did not help a lot in marketing but I was highly appreciated for providing my co-workers with potential customer info, which they would otherwise endeavor to collect manually. 
 
